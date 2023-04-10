@@ -1,0 +1,18 @@
+{
+  "name": "defi-sdk-js",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "repository": "git@github.com:forward-x/defi-sdk-js.git",
+  "author": "nedondev <nedondev@gmail.com>",
+  "scripts": {
+    "lint": "tsdx lint src",
+    "build": "tsdx build",
+    "start": "tsdx watch",
+    "prepublishOnly": "tsdx build"
+  },
+  "devDependencies": {
+    "ethers": "^5.7.2",
+    "tsdx": "^0.14.1"
+  }
+}
