@@ -1,6 +1,6 @@
 import { providers } from "ethers";
 
-enum ProviderType {
+export enum ProviderType {
     WS,
     HTTP
 }
@@ -17,8 +17,8 @@ export function getProvider(url: string, type: ProviderType) {
     switch (type) {
         case ProviderType.HTTP:
             // fwx provider, ethers provider
-            return new FWXHTTPProvider(url), new providers.JsonRpcProvider(url);
+            return [new FWXHTTPProvider(url), new providers.JsonRpcProvider(url)];
         case ProviderType.WS:
-            return new FWXWSProvider(url), new providers.WebSocketProvider(url);
+            return [new FWXWSProvider(url), new providers.WebSocketProvider(url)];
     }
 }
