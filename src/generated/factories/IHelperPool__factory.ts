@@ -89,6 +89,35 @@ const _abi = [
       },
       {
         internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+    ],
+    name: "claimableInterestMembership",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "tokenInterest",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "forwInterest",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "poolAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
         name: "interestAmount",
         type: "uint256",
       },

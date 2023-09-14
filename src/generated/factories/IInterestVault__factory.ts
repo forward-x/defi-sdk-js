@@ -205,6 +205,19 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "address",
+        name: "_address",
+        type: "address",
+      },
+    ],
+    name: "setTreasuryAddress",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "uint256",
         name: "_claimableTokenInterest",
         type: "uint256",

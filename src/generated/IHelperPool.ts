@@ -47,6 +47,7 @@ export interface IHelperPoolInterface extends utils.Interface {
   functions: {
     "calculateBorrowingInterest(address,uint256,uint256,uint256,address)": FunctionFragment;
     "claimableInterest(address,uint256)": FunctionFragment;
+    "claimableInterestMembership(address,uint256)": FunctionFragment;
     "getDepositAmountByInterestAmount(address,uint256,uint256)": FunctionFragment;
     "getInterestAmountByDepositAmount(address,uint256,uint256)": FunctionFragment;
     "getLendingInfo(address,uint256)": FunctionFragment;
@@ -62,6 +63,10 @@ export interface IHelperPoolInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "claimableInterest",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "claimableInterestMembership",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
@@ -99,6 +104,10 @@ export interface IHelperPoolInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "claimableInterest",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "claimableInterestMembership",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -173,6 +182,17 @@ export interface IHelperPool extends BaseContract {
     >;
 
     claimableInterest(
+      poolAddress: string,
+      nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        tokenInterest: BigNumber;
+        forwInterest: BigNumber;
+      }
+    >;
+
+    claimableInterestMembership(
       poolAddress: string,
       nftId: BigNumberish,
       overrides?: CallOverrides
@@ -264,6 +284,17 @@ export interface IHelperPool extends BaseContract {
   ): Promise<[BigNumber, BigNumber] & { ltv: BigNumber; interest: BigNumber }>;
 
   claimableInterest(
+    poolAddress: string,
+    nftId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & {
+      tokenInterest: BigNumber;
+      forwInterest: BigNumber;
+    }
+  >;
+
+  claimableInterestMembership(
     poolAddress: string,
     nftId: BigNumberish,
     overrides?: CallOverrides
@@ -367,6 +398,17 @@ export interface IHelperPool extends BaseContract {
       }
     >;
 
+    claimableInterestMembership(
+      poolAddress: string,
+      nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        tokenInterest: BigNumber;
+        forwInterest: BigNumber;
+      }
+    >;
+
     getDepositAmountByInterestAmount(
       poolAddress: string,
       interestAmount: BigNumberish,
@@ -456,6 +498,12 @@ export interface IHelperPool extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    claimableInterestMembership(
+      poolAddress: string,
+      nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getDepositAmountByInterestAmount(
       poolAddress: string,
       interestAmount: BigNumberish,
@@ -515,6 +563,12 @@ export interface IHelperPool extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     claimableInterest(
+      poolAddress: string,
+      nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    claimableInterestMembership(
       poolAddress: string,
       nftId: BigNumberish,
       overrides?: CallOverrides

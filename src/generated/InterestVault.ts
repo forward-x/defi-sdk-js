@@ -40,12 +40,14 @@ export interface InterestVaultInterface extends utils.Interface {
     "setForwAddress(address)": FunctionFragment;
     "setProtocolAddress(address)": FunctionFragment;
     "setTokenAddress(address)": FunctionFragment;
+    "setTreasuryAddress(address)": FunctionFragment;
     "settleInterest(uint256,uint256,uint256)": FunctionFragment;
     "tokenAddress()": FunctionFragment;
     "transferAddressTimelockManager(address)": FunctionFragment;
     "transferConfigTimelockManager(address)": FunctionFragment;
     "transferNoTimelockManager(address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
+    "treasuryAddress()": FunctionFragment;
     "unPause(bytes4)": FunctionFragment;
     "withdrawActualProfit()": FunctionFragment;
     "withdrawForwInterest(uint256)": FunctionFragment;
@@ -124,6 +126,10 @@ export interface InterestVaultInterface extends utils.Interface {
     values: [string]
   ): string;
   encodeFunctionData(
+    functionFragment: "setTreasuryAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "settleInterest",
     values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
@@ -146,6 +152,10 @@ export interface InterestVaultInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "treasuryAddress",
+    values?: undefined
   ): string;
   encodeFunctionData(functionFragment: "unPause", values: [BytesLike]): string;
   encodeFunctionData(
@@ -233,6 +243,10 @@ export interface InterestVaultInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "setTreasuryAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "settleInterest",
     data: BytesLike
   ): Result;
@@ -256,6 +270,10 @@ export interface InterestVaultInterface extends utils.Interface {
     functionFragment: "transferOwnership",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "treasuryAddress",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "unPause", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "withdrawActualProfit",
@@ -277,12 +295,13 @@ export interface InterestVaultInterface extends utils.Interface {
     "SetForwAddress(address,address,address)": EventFragment;
     "SetProtocolAddress(address,address,address)": EventFragment;
     "SetTokenAddress(address,address,address)": EventFragment;
+    "SetTreasuryAddress(address,address,address)": EventFragment;
     "SettleInterest(address,uint256,uint256,uint256)": EventFragment;
     "TransferAddressTimelockManager(address,address)": EventFragment;
     "TransferConfigTimelockManager(address,address)": EventFragment;
     "TransferNoTimelockManager(address,address)": EventFragment;
     "Unpaused(address,bytes4)": EventFragment;
-    "WithdrawActualProfit(address,uint256)": EventFragment;
+    "WithdrawActualProfit(address,address,uint256)": EventFragment;
     "WithdrawForwInterest(address,uint256)": EventFragment;
     "WithdrawTokenInterest(address,uint256,uint256,uint256)": EventFragment;
   };
@@ -293,6 +312,7 @@ export interface InterestVaultInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "SetForwAddress"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SetProtocolAddress"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SetTokenAddress"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "SetTreasuryAddress"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "SettleInterest"): EventFragment;
   getEvent(
     nameOrSignatureOrTopic: "TransferAddressTimelockManager"
@@ -358,6 +378,14 @@ export type SetTokenAddressEvent = TypedEvent<
 
 export type SetTokenAddressEventFilter = TypedEventFilter<SetTokenAddressEvent>;
 
+export type SetTreasuryAddressEvent = TypedEvent<
+  [string, string, string],
+  { sender: string; oldValue: string; newValue: string }
+>;
+
+export type SetTreasuryAddressEventFilter =
+  TypedEventFilter<SetTreasuryAddressEvent>;
+
 export type SettleInterestEvent = TypedEvent<
   [string, BigNumber, BigNumber, BigNumber],
   {
@@ -402,8 +430,8 @@ export type UnpausedEvent = TypedEvent<
 export type UnpausedEventFilter = TypedEventFilter<UnpausedEvent>;
 
 export type WithdrawActualProfitEvent = TypedEvent<
-  [string, BigNumber],
-  { sender: string; profitWithdraw: BigNumber }
+  [string, string, BigNumber],
+  { sender: string; to: string; profitWithdraw: BigNumber }
 >;
 
 export type WithdrawActualProfitEventFilter =
@@ -514,6 +542,11 @@ export interface InterestVault extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setTreasuryAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     settleInterest(
       _claimableTokenInterest: BigNumberish,
       _heldTokenInterest: BigNumberish,
@@ -542,6 +575,8 @@ export interface InterestVault extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    treasuryAddress(overrides?: CallOverrides): Promise<[string]>;
 
     unPause(
       _func: BytesLike,
@@ -624,6 +659,11 @@ export interface InterestVault extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setTreasuryAddress(
+    _address: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   settleInterest(
     _claimableTokenInterest: BigNumberish,
     _heldTokenInterest: BigNumberish,
@@ -652,6 +692,8 @@ export interface InterestVault extends BaseContract {
     newOwner: string,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  treasuryAddress(overrides?: CallOverrides): Promise<string>;
 
   unPause(
     _func: BytesLike,
@@ -725,6 +767,11 @@ export interface InterestVault extends BaseContract {
 
     setTokenAddress(_address: string, overrides?: CallOverrides): Promise<void>;
 
+    setTreasuryAddress(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     settleInterest(
       _claimableTokenInterest: BigNumberish,
       _heldTokenInterest: BigNumberish,
@@ -753,6 +800,8 @@ export interface InterestVault extends BaseContract {
       newOwner: string,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    treasuryAddress(overrides?: CallOverrides): Promise<string>;
 
     unPause(_func: BytesLike, overrides?: CallOverrides): Promise<void>;
 
@@ -837,6 +886,17 @@ export interface InterestVault extends BaseContract {
       newValue?: null
     ): SetTokenAddressEventFilter;
 
+    "SetTreasuryAddress(address,address,address)"(
+      sender?: string | null,
+      oldValue?: null,
+      newValue?: null
+    ): SetTreasuryAddressEventFilter;
+    SetTreasuryAddress(
+      sender?: string | null,
+      oldValue?: null,
+      newValue?: null
+    ): SetTreasuryAddressEventFilter;
+
     "SettleInterest(address,uint256,uint256,uint256)"(
       sender?: string | null,
       claimableTokenInterest?: null,
@@ -883,12 +943,14 @@ export interface InterestVault extends BaseContract {
     ): UnpausedEventFilter;
     Unpaused(account?: null, functionSelector?: null): UnpausedEventFilter;
 
-    "WithdrawActualProfit(address,uint256)"(
+    "WithdrawActualProfit(address,address,uint256)"(
       sender?: string | null,
+      to?: null,
       profitWithdraw?: null
     ): WithdrawActualProfitEventFilter;
     WithdrawActualProfit(
       sender?: string | null,
+      to?: null,
       profitWithdraw?: null
     ): WithdrawActualProfitEventFilter;
 
@@ -977,6 +1039,11 @@ export interface InterestVault extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    setTreasuryAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     settleInterest(
       _claimableTokenInterest: BigNumberish,
       _heldTokenInterest: BigNumberish,
@@ -1005,6 +1072,8 @@ export interface InterestVault extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    treasuryAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     unPause(
       _func: BytesLike,
@@ -1109,6 +1178,11 @@ export interface InterestVault extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    setTreasuryAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     settleInterest(
       _claimableTokenInterest: BigNumberish,
       _heldTokenInterest: BigNumberish,
@@ -1137,6 +1211,8 @@ export interface InterestVault extends BaseContract {
       newOwner: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    treasuryAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     unPause(
       _func: BytesLike,

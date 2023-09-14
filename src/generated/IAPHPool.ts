@@ -533,7 +533,12 @@ export interface IAPHPool extends BaseContract {
     calculateInterest(
       borrowAmount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        interestRate: BigNumber;
+        interestOwedPerDay: BigNumber;
+      }
+    >;
 
     claimAllInterest(
       nftId: BigNumberish,
@@ -554,7 +559,9 @@ export interface IAPHPool extends BaseContract {
 
     coreAddress(overrides?: CallOverrides): Promise<[string]>;
 
-    currentSupply(overrides?: CallOverrides): Promise<[BigNumber]>;
+    currentSupply(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { _currentSupply: BigNumber }>;
 
     deposit(
       nftId: BigNumberish,
@@ -566,14 +573,18 @@ export interface IAPHPool extends BaseContract {
 
     getActualTokenPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    getInterestForwPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getInterestForwPrice(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { ifpPrice: BigNumber }>;
 
-    getInterestTokenPrice(overrides?: CallOverrides): Promise<[BigNumber]>;
+    getInterestTokenPrice(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { itpPrice: BigNumber }>;
 
     getNextBorrowingInterest(
       borrowAmount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber]>;
+    ): Promise<[BigNumber] & { nextInterestRate: BigNumber }>;
 
     getRates(overrides?: CallOverrides): Promise<[BigNumber[]]>;
 
@@ -599,11 +610,11 @@ export interface IAPHPool extends BaseContract {
     openPosition(
       nftId: BigNumberish,
       collateralTokenAddress: string,
-      underlyingTokenAddress: string,
+      swapTokenAddress: string,
       entryPrice: BigNumberish,
       contractSize: BigNumberish,
       leverage: BigNumberish,
-      slipPage: BigNumberish,
+      slippage: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -634,7 +645,9 @@ export interface IAPHPool extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    utilizationRate(overrides?: CallOverrides): Promise<[BigNumber]>;
+    utilizationRate(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { _utilizationRate: BigNumber }>;
 
     utils(arg0: BigNumberish, overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -693,7 +706,12 @@ export interface IAPHPool extends BaseContract {
   calculateInterest(
     borrowAmount: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<[BigNumber, BigNumber]>;
+  ): Promise<
+    [BigNumber, BigNumber] & {
+      interestRate: BigNumber;
+      interestOwedPerDay: BigNumber;
+    }
+  >;
 
   claimAllInterest(
     nftId: BigNumberish,
@@ -759,11 +777,11 @@ export interface IAPHPool extends BaseContract {
   openPosition(
     nftId: BigNumberish,
     collateralTokenAddress: string,
-    underlyingTokenAddress: string,
+    swapTokenAddress: string,
     entryPrice: BigNumberish,
     contractSize: BigNumberish,
     leverage: BigNumberish,
-    slipPage: BigNumberish,
+    slippage: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -850,7 +868,12 @@ export interface IAPHPool extends BaseContract {
     calculateInterest(
       borrowAmount: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        interestRate: BigNumber;
+        interestOwedPerDay: BigNumber;
+      }
+    >;
 
     claimAllInterest(
       nftId: BigNumberish,
@@ -922,11 +945,11 @@ export interface IAPHPool extends BaseContract {
     openPosition(
       nftId: BigNumberish,
       collateralTokenAddress: string,
-      underlyingTokenAddress: string,
+      swapTokenAddress: string,
       entryPrice: BigNumberish,
       contractSize: BigNumberish,
       leverage: BigNumberish,
-      slipPage: BigNumberish,
+      slippage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1076,11 +1099,11 @@ export interface IAPHPool extends BaseContract {
     openPosition(
       nftId: BigNumberish,
       collateralTokenAddress: string,
-      underlyingTokenAddress: string,
+      swapTokenAddress: string,
       entryPrice: BigNumberish,
       contractSize: BigNumberish,
       leverage: BigNumberish,
-      slipPage: BigNumberish,
+      slippage: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1251,11 +1274,11 @@ export interface IAPHPool extends BaseContract {
     openPosition(
       nftId: BigNumberish,
       collateralTokenAddress: string,
-      underlyingTokenAddress: string,
+      swapTokenAddress: string,
       entryPrice: BigNumberish,
       contractSize: BigNumberish,
       leverage: BigNumberish,
-      slipPage: BigNumberish,
+      slippage: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 

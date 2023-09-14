@@ -20,7 +20,7 @@ export interface IAPHLibraryInterface extends utils.Interface {
   functions: {
     "addIntToUint(uint256,int256)": FunctionFragment;
     "calculateMargin(uint256,uint256,uint256,int256,uint256,uint256)": FunctionFragment;
-    "calculatePNL(uint256,uint256,uint256)": FunctionFragment;
+    "calculatePNL(uint256,uint256,uint256,uint256)": FunctionFragment;
     "hashPair(address,address)": FunctionFragment;
   };
 
@@ -41,7 +41,7 @@ export interface IAPHLibraryInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "calculatePNL",
-    values: [BigNumberish, BigNumberish, BigNumberish]
+    values: [BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "hashPair",
@@ -113,6 +113,7 @@ export interface IAPHLibrary extends BaseContract {
       firstValue: BigNumberish,
       secondValue: BigNumberish,
       multiplier: BigNumberish,
+      divisor: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
@@ -143,6 +144,7 @@ export interface IAPHLibrary extends BaseContract {
     firstValue: BigNumberish,
     secondValue: BigNumberish,
     multiplier: BigNumberish,
+    divisor: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -173,6 +175,7 @@ export interface IAPHLibrary extends BaseContract {
       firstValue: BigNumberish,
       secondValue: BigNumberish,
       multiplier: BigNumberish,
+      divisor: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -206,6 +209,7 @@ export interface IAPHLibrary extends BaseContract {
       firstValue: BigNumberish,
       secondValue: BigNumberish,
       multiplier: BigNumberish,
+      divisor: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -237,6 +241,7 @@ export interface IAPHLibrary extends BaseContract {
       firstValue: BigNumberish,
       secondValue: BigNumberish,
       multiplier: BigNumberish,
+      divisor: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

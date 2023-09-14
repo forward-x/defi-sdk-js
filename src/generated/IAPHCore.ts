@@ -65,11 +65,15 @@ export declare namespace CoreBase {
     bountyFeeRate: BigNumberish;
     penaltyFeeRate: BigNumberish;
     maxOraclePriceDiffPercent: BigNumberish;
+    maxLiquidationOraclePriceDiffPercent: BigNumberish;
+    minimumCollateralInUSD: BigNumberish;
   };
 
   export type LoanConfigStructOutput = [
     string,
     string,
+    BigNumber,
+    BigNumber,
     BigNumber,
     BigNumber,
     BigNumber,
@@ -85,6 +89,8 @@ export declare namespace CoreBase {
     bountyFeeRate: BigNumber;
     penaltyFeeRate: BigNumber;
     maxOraclePriceDiffPercent: BigNumber;
+    maxLiquidationOraclePriceDiffPercent: BigNumber;
+    minimumCollateralInUSD: BigNumber;
   };
 
   export type LoanExtStruct = {
@@ -154,7 +160,8 @@ export declare namespace CoreBase {
   export type PositionConfigStruct = {
     maintenanceMargin: BigNumberish;
     minimumMargin: BigNumberish;
-    bountyFeeRate: BigNumberish;
+    bountyFeeRateToProtocol: BigNumberish;
+    bountyFeeRateToLiquidator: BigNumberish;
     forwRewardAmount: BigNumberish;
     positionSizeTargetInUSD: BigNumberish;
     minOpenPositionSize: BigNumberish;
@@ -168,11 +175,13 @@ export declare namespace CoreBase {
     BigNumber,
     BigNumber,
     BigNumber,
+    BigNumber,
     BigNumber
   ] & {
     maintenanceMargin: BigNumber;
     minimumMargin: BigNumber;
-    bountyFeeRate: BigNumber;
+    bountyFeeRateToProtocol: BigNumber;
+    bountyFeeRateToLiquidator: BigNumber;
     forwRewardAmount: BigNumber;
     positionSizeTargetInUSD: BigNumber;
     minOpenPositionSize: BigNumber;
@@ -187,6 +196,8 @@ export declare namespace CoreBase {
     pairByte: BytesLike;
     averageEntryPrice: BigNumberish;
     interestPaid: BigNumberish;
+    totalTradingFee: BigNumberish;
+    totalSwapFee: BigNumberish;
   };
 
   export type PositionStateStructOutput = [
@@ -195,6 +206,8 @@ export declare namespace CoreBase {
     BigNumber,
     BigNumber,
     string,
+    BigNumber,
+    BigNumber,
     BigNumber,
     BigNumber
   ] & {
@@ -205,53 +218,54 @@ export declare namespace CoreBase {
     pairByte: string;
     averageEntryPrice: BigNumber;
     interestPaid: BigNumber;
+    totalTradingFee: BigNumber;
+    totalSwapFee: BigNumber;
   };
 
   export type PositionStruct = {
-    entryPrice: BigNumberish;
-    lastSettleTimestamp: BigNumberish;
-    collateralTokenAddress: string;
     id: BigNumberish;
-    swapTokenAddress: string;
+    collateralTokenAddress: string;
+    lastSettleTimestamp: BigNumberish;
     borrowTokenAddress: string;
-    collateralSwappedAmount: BigNumberish;
-    borrowAmount: BigNumberish;
+    swapTokenAddress: string;
+    entryPrice: BigNumberish;
     contractSize: BigNumberish;
-    interestOwePerDay: BigNumberish;
+    borrowAmount: BigNumberish;
+    collateralSwappedAmount: BigNumberish;
     interestOwed: BigNumberish;
+    interestOwePerDay: BigNumberish;
   };
 
   export type PositionStructOutput = [
     BigNumber,
-    BigNumber,
     string,
     BigNumber,
     string,
     string,
+    BigNumber,
     BigNumber,
     BigNumber,
     BigNumber,
     BigNumber,
     BigNumber
   ] & {
-    entryPrice: BigNumber;
-    lastSettleTimestamp: BigNumber;
-    collateralTokenAddress: string;
     id: BigNumber;
-    swapTokenAddress: string;
+    collateralTokenAddress: string;
+    lastSettleTimestamp: BigNumber;
     borrowTokenAddress: string;
-    collateralSwappedAmount: BigNumber;
-    borrowAmount: BigNumber;
+    swapTokenAddress: string;
+    entryPrice: BigNumber;
     contractSize: BigNumber;
-    interestOwePerDay: BigNumber;
+    borrowAmount: BigNumber;
+    collateralSwappedAmount: BigNumber;
     interestOwed: BigNumber;
+    interestOwePerDay: BigNumber;
   };
 
   export type SwapConfigStruct = {
     token0: string;
-    maxAmountInToken0Size: BigNumberish;
-    maxAmountInToken1Size: BigNumberish;
-    maxRouterPriceDiffPercent: BigNumberish;
+    maxSwapSize: BigNumberish;
+    maxPriceImpact: BigNumberish;
     maxOraclePriceDiffPercent: BigNumberish;
     maxLiquidationOraclePriceDiffPercent: BigNumberish;
   };
@@ -261,13 +275,11 @@ export declare namespace CoreBase {
     BigNumber,
     BigNumber,
     BigNumber,
-    BigNumber,
     BigNumber
   ] & {
     token0: string;
-    maxAmountInToken0Size: BigNumber;
-    maxAmountInToken1Size: BigNumber;
-    maxRouterPriceDiffPercent: BigNumber;
+    maxSwapSize: BigNumber;
+    maxPriceImpact: BigNumber;
     maxOraclePriceDiffPercent: BigNumber;
     maxLiquidationOraclePriceDiffPercent: BigNumber;
   };
@@ -327,6 +339,7 @@ export interface IAPHCoreInterface extends utils.Interface {
     "assetToPool(address)": FunctionFragment;
     "auctionSpread()": FunctionFragment;
     "borrow(uint256,uint256,uint256,address,uint256,address,uint256,uint256)": FunctionFragment;
+    "checkStakingAmountSufficient(uint256,uint256,address)": FunctionFragment;
     "closePosition(uint256,uint256,uint256)": FunctionFragment;
     "coreBorrowingAddress()": FunctionFragment;
     "coreFutureClosingAddress()": FunctionFragment;
@@ -341,16 +354,19 @@ export interface IAPHCoreInterface extends utils.Interface {
     "forwAddress()": FunctionFragment;
     "forwLendingDistributionPerBlock(address)": FunctionFragment;
     "forwLendingVaultAddress()": FunctionFragment;
+    "forwStakingMultiplier()": FunctionFragment;
     "forwTradingVaultAddress()": FunctionFragment;
-    "getActiveLoans(uint256,uint256,uint256)": FunctionFragment;
+    "getAmounts(bool,bool,uint256,uint256,address,address)": FunctionFragment;
+    "getAmountsWithRouterSelection(bool,bytes32,uint256,address,address,uint256,uint256)": FunctionFragment;
     "getLoanCurrentLTV(uint256,uint256)": FunctionFragment;
     "getPoolList()": FunctionFragment;
-    "getPositionMargin(uint256,bytes32)": FunctionFragment;
+    "getPositionMargin(uint256,bytes32,bool)": FunctionFragment;
     "getRouters()": FunctionFragment;
     "isPool(address)": FunctionFragment;
     "lastSettleForw(address)": FunctionFragment;
     "liquidate(uint256,uint256)": FunctionFragment;
     "liquidatePosition(uint256,bytes32)": FunctionFragment;
+    "liquidationFee()": FunctionFragment;
     "loanConfigs(address,address)": FunctionFragment;
     "loanDuration()": FunctionFragment;
     "loanExts(uint256,uint256)": FunctionFragment;
@@ -375,7 +391,9 @@ export interface IAPHCoreInterface extends utils.Interface {
     "settleBorrowInterest(uint256,uint256)": FunctionFragment;
     "settleForwInterest()": FunctionFragment;
     "swapConfigs(address,bytes32)": FunctionFragment;
+    "swapFeeRates(address)": FunctionFragment;
     "swapableToken(address)": FunctionFragment;
+    "tokenPrecisionUnit(address)": FunctionFragment;
     "totalCollateralHold(address)": FunctionFragment;
     "totalLossInUSD()": FunctionFragment;
     "tradingCollateralWhitelist(address)": FunctionFragment;
@@ -415,6 +433,10 @@ export interface IAPHCoreInterface extends utils.Interface {
       BigNumberish,
       BigNumberish
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "checkStakingAmountSufficient",
+    values: [BigNumberish, BigNumberish, string]
   ): string;
   encodeFunctionData(
     functionFragment: "closePosition",
@@ -470,12 +492,28 @@ export interface IAPHCoreInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "forwStakingMultiplier",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "forwTradingVaultAddress",
     values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: "getActiveLoans",
-    values: [BigNumberish, BigNumberish, BigNumberish]
+    functionFragment: "getAmounts",
+    values: [boolean, boolean, BigNumberish, BigNumberish, string, string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAmountsWithRouterSelection",
+    values: [
+      boolean,
+      BytesLike,
+      BigNumberish,
+      string,
+      string,
+      BigNumberish,
+      BigNumberish
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "getLoanCurrentLTV",
@@ -487,7 +525,7 @@ export interface IAPHCoreInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "getPositionMargin",
-    values: [BigNumberish, BytesLike]
+    values: [BigNumberish, BytesLike, boolean]
   ): string;
   encodeFunctionData(
     functionFragment: "getRouters",
@@ -505,6 +543,10 @@ export interface IAPHCoreInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "liquidatePosition",
     values: [BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "liquidationFee",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "loanConfigs",
@@ -594,7 +636,15 @@ export interface IAPHCoreInterface extends utils.Interface {
     values: [string, BytesLike]
   ): string;
   encodeFunctionData(
+    functionFragment: "swapFeeRates",
+    values: [string]
+  ): string;
+  encodeFunctionData(
     functionFragment: "swapableToken",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenPrecisionUnit",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -649,6 +699,10 @@ export interface IAPHCoreInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "borrow", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "checkStakingAmountSufficient",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "closePosition",
     data: BytesLike
   ): Result;
@@ -702,11 +756,16 @@ export interface IAPHCoreInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "forwTradingVaultAddress",
+    functionFragment: "forwStakingMultiplier",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getActiveLoans",
+    functionFragment: "forwTradingVaultAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getAmounts", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getAmountsWithRouterSelection",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -730,6 +789,10 @@ export interface IAPHCoreInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "liquidate", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "liquidatePosition",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "liquidationFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -799,7 +862,15 @@ export interface IAPHCoreInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "swapFeeRates",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "swapableToken",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "tokenPrecisionUnit",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -889,8 +960,15 @@ export interface IAPHCore extends BaseContract {
       collateralTokenAddress: string,
       newOwedPerDay: BigNumberish,
       interestRate: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    checkStakingAmountSufficient(
+      nftId: BigNumberish,
+      newAmount: BigNumberish,
+      tokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     closePosition(
       nftId: BigNumberish,
@@ -940,17 +1018,40 @@ export interface IAPHCore extends BaseContract {
 
     forwLendingVaultAddress(overrides?: CallOverrides): Promise<[string]>;
 
+    forwStakingMultiplier(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     forwTradingVaultAddress(overrides?: CallOverrides): Promise<[string]>;
 
-    getActiveLoans(
-      nftId: BigNumberish,
-      cursor: BigNumberish,
-      resultPerPage: BigNumberish,
+    getAmounts(
+      isExactOutput: boolean,
+      extractSwapFee: boolean,
+      routerIndex: BigNumberish,
+      amountInput: BigNumberish,
+      src: string,
+      dst: string,
       overrides?: CallOverrides
     ): Promise<
-      [CoreBase.LoanStructOutput[], BigNumber] & {
-        activaLoans: CoreBase.LoanStructOutput[];
-        newCursor: BigNumber;
+      [BigNumber[], BigNumber, string] & {
+        amounts: BigNumber[];
+        swapFee: BigNumber;
+        router: string;
+      }
+    >;
+
+    getAmountsWithRouterSelection(
+      isExactOutput: boolean,
+      pairByte: BytesLike,
+      amountInput: BigNumberish,
+      src: string,
+      dst: string,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber[], BigNumber, string] & {
+        amounts: BigNumber[];
+        swapFee: BigNumber;
+        router: string;
       }
     >;
 
@@ -965,6 +1066,7 @@ export interface IAPHCore extends BaseContract {
     getPositionMargin(
       nftId: BigNumberish,
       pairByte: BytesLike,
+      isLiquidate: boolean,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { margin: BigNumber }>;
 
@@ -972,7 +1074,7 @@ export interface IAPHCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[[string, string, string, string, string]]>;
 
-    isPool(poolAddess: string, overrides?: CallOverrides): Promise<[boolean]>;
+    isPool(poolAddress: string, overrides?: CallOverrides): Promise<[boolean]>;
 
     lastSettleForw(
       arg0: string,
@@ -990,6 +1092,8 @@ export interface IAPHCore extends BaseContract {
       pairByte: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    liquidationFee(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     loanConfigs(
       arg0: string,
@@ -1026,8 +1130,8 @@ export interface IAPHCore extends BaseContract {
     ): Promise<[BigNumber]>;
 
     openPosition(
-      arg0: APHLibrary.OpenPositionParamsStruct,
-      arg1: APHLibrary.TokenAddressParamsStruct,
+      params: APHLibrary.OpenPositionParamsStruct,
+      addressParams: APHLibrary.TokenAddressParamsStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -1101,7 +1205,14 @@ export interface IAPHCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[CoreBase.SwapConfigStructOutput]>;
 
+    swapFeeRates(arg0: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
     swapableToken(arg0: string, overrides?: CallOverrides): Promise<[boolean]>;
+
+    tokenPrecisionUnit(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     totalCollateralHold(
       arg0: string,
@@ -1168,8 +1279,15 @@ export interface IAPHCore extends BaseContract {
     collateralTokenAddress: string,
     newOwedPerDay: BigNumberish,
     interestRate: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> }
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  checkStakingAmountSufficient(
+    nftId: BigNumberish,
+    newAmount: BigNumberish,
+    tokenAddress: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   closePosition(
     nftId: BigNumberish,
@@ -1219,17 +1337,40 @@ export interface IAPHCore extends BaseContract {
 
   forwLendingVaultAddress(overrides?: CallOverrides): Promise<string>;
 
+  forwStakingMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
+
   forwTradingVaultAddress(overrides?: CallOverrides): Promise<string>;
 
-  getActiveLoans(
-    nftId: BigNumberish,
-    cursor: BigNumberish,
-    resultPerPage: BigNumberish,
+  getAmounts(
+    isExactOutput: boolean,
+    extractSwapFee: boolean,
+    routerIndex: BigNumberish,
+    amountInput: BigNumberish,
+    src: string,
+    dst: string,
     overrides?: CallOverrides
   ): Promise<
-    [CoreBase.LoanStructOutput[], BigNumber] & {
-      activaLoans: CoreBase.LoanStructOutput[];
-      newCursor: BigNumber;
+    [BigNumber[], BigNumber, string] & {
+      amounts: BigNumber[];
+      swapFee: BigNumber;
+      router: string;
+    }
+  >;
+
+  getAmountsWithRouterSelection(
+    isExactOutput: boolean,
+    pairByte: BytesLike,
+    amountInput: BigNumberish,
+    src: string,
+    dst: string,
+    expectedRate: BigNumberish,
+    slippage: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber[], BigNumber, string] & {
+      amounts: BigNumber[];
+      swapFee: BigNumber;
+      router: string;
     }
   >;
 
@@ -1244,6 +1385,7 @@ export interface IAPHCore extends BaseContract {
   getPositionMargin(
     nftId: BigNumberish,
     pairByte: BytesLike,
+    isLiquidate: boolean,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -1251,7 +1393,7 @@ export interface IAPHCore extends BaseContract {
     overrides?: CallOverrides
   ): Promise<[string, string, string, string, string]>;
 
-  isPool(poolAddess: string, overrides?: CallOverrides): Promise<boolean>;
+  isPool(poolAddress: string, overrides?: CallOverrides): Promise<boolean>;
 
   lastSettleForw(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1266,6 +1408,8 @@ export interface IAPHCore extends BaseContract {
     pairByte: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  liquidationFee(overrides?: CallOverrides): Promise<BigNumber>;
 
   loanConfigs(
     arg0: string,
@@ -1302,8 +1446,8 @@ export interface IAPHCore extends BaseContract {
   ): Promise<BigNumber>;
 
   openPosition(
-    arg0: APHLibrary.OpenPositionParamsStruct,
-    arg1: APHLibrary.TokenAddressParamsStruct,
+    params: APHLibrary.OpenPositionParamsStruct,
+    addressParams: APHLibrary.TokenAddressParamsStruct,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -1377,7 +1521,14 @@ export interface IAPHCore extends BaseContract {
     overrides?: CallOverrides
   ): Promise<CoreBase.SwapConfigStructOutput>;
 
+  swapFeeRates(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
   swapableToken(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
+  tokenPrecisionUnit(
+    arg0: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   totalCollateralHold(
     arg0: string,
@@ -1447,6 +1598,13 @@ export interface IAPHCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<CoreBase.LoanStructOutput>;
 
+    checkStakingAmountSufficient(
+      nftId: BigNumberish,
+      newAmount: BigNumberish,
+      tokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     closePosition(
       nftId: BigNumberish,
       posId: BigNumberish,
@@ -1495,17 +1653,40 @@ export interface IAPHCore extends BaseContract {
 
     forwLendingVaultAddress(overrides?: CallOverrides): Promise<string>;
 
+    forwStakingMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
+
     forwTradingVaultAddress(overrides?: CallOverrides): Promise<string>;
 
-    getActiveLoans(
-      nftId: BigNumberish,
-      cursor: BigNumberish,
-      resultPerPage: BigNumberish,
+    getAmounts(
+      isExactOutput: boolean,
+      extractSwapFee: boolean,
+      routerIndex: BigNumberish,
+      amountInput: BigNumberish,
+      src: string,
+      dst: string,
       overrides?: CallOverrides
     ): Promise<
-      [CoreBase.LoanStructOutput[], BigNumber] & {
-        activaLoans: CoreBase.LoanStructOutput[];
-        newCursor: BigNumber;
+      [BigNumber[], BigNumber, string] & {
+        amounts: BigNumber[];
+        swapFee: BigNumber;
+        router: string;
+      }
+    >;
+
+    getAmountsWithRouterSelection(
+      isExactOutput: boolean,
+      pairByte: BytesLike,
+      amountInput: BigNumberish,
+      src: string,
+      dst: string,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber[], BigNumber, string] & {
+        amounts: BigNumber[];
+        swapFee: BigNumber;
+        router: string;
       }
     >;
 
@@ -1520,6 +1701,7 @@ export interface IAPHCore extends BaseContract {
     getPositionMargin(
       nftId: BigNumberish,
       pairByte: BytesLike,
+      isLiquidate: boolean,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1527,7 +1709,7 @@ export interface IAPHCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string, string, string, string, string]>;
 
-    isPool(poolAddess: string, overrides?: CallOverrides): Promise<boolean>;
+    isPool(poolAddress: string, overrides?: CallOverrides): Promise<boolean>;
 
     lastSettleForw(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1535,13 +1717,22 @@ export interface IAPHCore extends BaseContract {
       loanId: BigNumberish,
       nftId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber, BigNumber]>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber, BigNumber] & {
+        repayBorrow: BigNumber;
+        repayInterest: BigNumber;
+        bountyReward: BigNumber;
+        leftOverCollateral: BigNumber;
+      }
+    >;
 
     liquidatePosition(
       nftId: BigNumberish,
       pairByte: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    liquidationFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     loanConfigs(
       arg0: string,
@@ -1578,8 +1769,8 @@ export interface IAPHCore extends BaseContract {
     ): Promise<BigNumber>;
 
     openPosition(
-      arg0: APHLibrary.OpenPositionParamsStruct,
-      arg1: APHLibrary.TokenAddressParamsStruct,
+      params: APHLibrary.OpenPositionParamsStruct,
+      addressParams: APHLibrary.TokenAddressParamsStruct,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1624,13 +1815,23 @@ export interface IAPHCore extends BaseContract {
       repayAmount: BigNumberish,
       isOnlyInterest: boolean,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        borrowPaid: BigNumber;
+        interestPaid: BigNumber;
+      }
+    >;
 
     rollover(
       loanId: BigNumberish,
       nftId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber, BigNumber]>;
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        delayInterest: BigNumber;
+        collateralBountyReward: BigNumber;
+      }
+    >;
 
     routers(arg0: BigNumberish, overrides?: CallOverrides): Promise<string>;
 
@@ -1648,7 +1849,14 @@ export interface IAPHCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<CoreBase.SwapConfigStructOutput>;
 
+    swapFeeRates(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     swapableToken(arg0: string, overrides?: CallOverrides): Promise<boolean>;
+
+    tokenPrecisionUnit(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     totalCollateralHold(
       arg0: string,
@@ -1715,7 +1923,14 @@ export interface IAPHCore extends BaseContract {
       collateralTokenAddress: string,
       newOwedPerDay: BigNumberish,
       interestRate: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    checkStakingAmountSufficient(
+      nftId: BigNumberish,
+      newAmount: BigNumberish,
+      tokenAddress: string,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     closePosition(
@@ -1766,12 +1981,28 @@ export interface IAPHCore extends BaseContract {
 
     forwLendingVaultAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
+    forwStakingMultiplier(overrides?: CallOverrides): Promise<BigNumber>;
+
     forwTradingVaultAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
-    getActiveLoans(
-      nftId: BigNumberish,
-      cursor: BigNumberish,
-      resultPerPage: BigNumberish,
+    getAmounts(
+      isExactOutput: boolean,
+      extractSwapFee: boolean,
+      routerIndex: BigNumberish,
+      amountInput: BigNumberish,
+      src: string,
+      dst: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getAmountsWithRouterSelection(
+      isExactOutput: boolean,
+      pairByte: BytesLike,
+      amountInput: BigNumberish,
+      src: string,
+      dst: string,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1786,12 +2017,13 @@ export interface IAPHCore extends BaseContract {
     getPositionMargin(
       nftId: BigNumberish,
       pairByte: BytesLike,
+      isLiquidate: boolean,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getRouters(overrides?: CallOverrides): Promise<BigNumber>;
 
-    isPool(poolAddess: string, overrides?: CallOverrides): Promise<BigNumber>;
+    isPool(poolAddress: string, overrides?: CallOverrides): Promise<BigNumber>;
 
     lastSettleForw(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1806,6 +2038,8 @@ export interface IAPHCore extends BaseContract {
       pairByte: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    liquidationFee(overrides?: CallOverrides): Promise<BigNumber>;
 
     loanConfigs(
       arg0: string,
@@ -1842,8 +2076,8 @@ export interface IAPHCore extends BaseContract {
     ): Promise<BigNumber>;
 
     openPosition(
-      arg0: APHLibrary.OpenPositionParamsStruct,
-      arg1: APHLibrary.TokenAddressParamsStruct,
+      params: APHLibrary.OpenPositionParamsStruct,
+      addressParams: APHLibrary.TokenAddressParamsStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -1911,7 +2145,14 @@ export interface IAPHCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    swapFeeRates(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
     swapableToken(arg0: string, overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenPrecisionUnit(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     totalCollateralHold(
       arg0: string,
@@ -1984,7 +2225,14 @@ export interface IAPHCore extends BaseContract {
       collateralTokenAddress: string,
       newOwedPerDay: BigNumberish,
       interestRate: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> }
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    checkStakingAmountSufficient(
+      nftId: BigNumberish,
+      newAmount: BigNumberish,
+      tokenAddress: string,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     closePosition(
@@ -2047,14 +2295,32 @@ export interface IAPHCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    forwStakingMultiplier(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     forwTradingVaultAddress(
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getActiveLoans(
-      nftId: BigNumberish,
-      cursor: BigNumberish,
-      resultPerPage: BigNumberish,
+    getAmounts(
+      isExactOutput: boolean,
+      extractSwapFee: boolean,
+      routerIndex: BigNumberish,
+      amountInput: BigNumberish,
+      src: string,
+      dst: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getAmountsWithRouterSelection(
+      isExactOutput: boolean,
+      pairByte: BytesLike,
+      amountInput: BigNumberish,
+      src: string,
+      dst: string,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2069,13 +2335,14 @@ export interface IAPHCore extends BaseContract {
     getPositionMargin(
       nftId: BigNumberish,
       pairByte: BytesLike,
+      isLiquidate: boolean,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getRouters(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     isPool(
-      poolAddess: string,
+      poolAddress: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -2095,6 +2362,8 @@ export interface IAPHCore extends BaseContract {
       pairByte: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    liquidationFee(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     loanConfigs(
       arg0: string,
@@ -2131,8 +2400,8 @@ export interface IAPHCore extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     openPosition(
-      arg0: APHLibrary.OpenPositionParamsStruct,
-      arg1: APHLibrary.TokenAddressParamsStruct,
+      params: APHLibrary.OpenPositionParamsStruct,
+      addressParams: APHLibrary.TokenAddressParamsStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -2215,7 +2484,17 @@ export interface IAPHCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    swapFeeRates(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     swapableToken(
+      arg0: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    tokenPrecisionUnit(
       arg0: string,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
