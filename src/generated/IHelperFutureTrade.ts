@@ -17,43 +17,43 @@ import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
 export declare namespace CoreBase {
   export type PositionStruct = {
-    entryPrice: BigNumberish;
-    lastSettleTimestamp: BigNumberish;
-    collateralTokenAddress: string;
     id: BigNumberish;
-    swapTokenAddress: string;
+    collateralTokenAddress: string;
+    lastSettleTimestamp: BigNumberish;
     borrowTokenAddress: string;
-    collateralSwappedAmount: BigNumberish;
-    borrowAmount: BigNumberish;
+    swapTokenAddress: string;
+    entryPrice: BigNumberish;
     contractSize: BigNumberish;
-    interestOwePerDay: BigNumberish;
+    borrowAmount: BigNumberish;
+    collateralSwappedAmount: BigNumberish;
     interestOwed: BigNumberish;
+    interestOwePerDay: BigNumberish;
   };
 
   export type PositionStructOutput = [
     BigNumber,
-    BigNumber,
     string,
     BigNumber,
     string,
     string,
+    BigNumber,
     BigNumber,
     BigNumber,
     BigNumber,
     BigNumber,
     BigNumber
   ] & {
-    entryPrice: BigNumber;
-    lastSettleTimestamp: BigNumber;
-    collateralTokenAddress: string;
     id: BigNumber;
-    swapTokenAddress: string;
+    collateralTokenAddress: string;
+    lastSettleTimestamp: BigNumber;
     borrowTokenAddress: string;
-    collateralSwappedAmount: BigNumber;
-    borrowAmount: BigNumber;
+    swapTokenAddress: string;
+    entryPrice: BigNumber;
     contractSize: BigNumber;
-    interestOwePerDay: BigNumber;
+    borrowAmount: BigNumber;
+    collateralSwappedAmount: BigNumber;
     interestOwed: BigNumber;
+    interestOwePerDay: BigNumber;
   };
 
   export type PositionStateStruct = {
@@ -64,6 +64,8 @@ export declare namespace CoreBase {
     pairByte: BytesLike;
     averageEntryPrice: BigNumberish;
     interestPaid: BigNumberish;
+    totalTradingFee: BigNumberish;
+    totalSwapFee: BigNumberish;
   };
 
   export type PositionStateStructOutput = [
@@ -72,6 +74,8 @@ export declare namespace CoreBase {
     BigNumber,
     BigNumber,
     string,
+    BigNumber,
+    BigNumber,
     BigNumber,
     BigNumber
   ] & {
@@ -82,17 +86,19 @@ export declare namespace CoreBase {
     pairByte: string;
     averageEntryPrice: BigNumber;
     interestPaid: BigNumber;
+    totalTradingFee: BigNumber;
+    totalSwapFee: BigNumber;
   };
 }
 
 export declare namespace HelperBase {
   export type PositionDataStruct = {
     position: CoreBase.PositionStruct;
+    PNL: BigNumberish;
+    ROE: BigNumberish;
     margin: BigNumberish;
-    liqPrice: BigNumberish;
-    pnl: BigNumberish;
     rate: BigNumberish;
-    percentPNL: BigNumberish;
+    liqPrice: BigNumberish;
   };
 
   export type PositionDataStructOutput = [
@@ -104,57 +110,170 @@ export declare namespace HelperBase {
     BigNumber
   ] & {
     position: CoreBase.PositionStructOutput;
+    PNL: BigNumber;
+    ROE: BigNumber;
     margin: BigNumber;
-    liqPrice: BigNumber;
-    pnl: BigNumber;
     rate: BigNumber;
-    percentPNL: BigNumber;
+    liqPrice: BigNumber;
   };
 }
 
 export interface IHelperFutureTradeInterface extends utils.Interface {
   contractName: "IHelperFutureTrade";
   functions: {
-    "getAllActivePositions(uint256,uint256)": FunctionFragment;
-    "getCollateralWalletBalance(uint256,address,address)": FunctionFragment;
-    "getLiquidatePrice(uint256,bytes32)": FunctionFragment;
-    "getMaxContractSize(uint256,uint256,uint256,uint256,address,address,address,uint256)": FunctionFragment;
+    "getAllActivePositions(uint256)": FunctionFragment;
+    "getAveragePrice(uint256,bytes32,bool,uint256,uint256,uint256)": FunctionFragment;
+    "getBalanceAfterOpenPosition(uint256,bytes32,bool,uint256,uint256,uint256)": FunctionFragment;
+    "getBalanceDetails(uint256,bytes32)": FunctionFragment;
+    "getClosingFee(uint256,bytes32,uint256)": FunctionFragment;
+    "getEntryPrice(uint256,bytes32,bool,uint256,uint256,uint256)": FunctionFragment;
+    "getLiqPriceAfterOpenPosition(uint256,bytes32,bool,uint256,uint256,uint256)": FunctionFragment;
+    "getLiquidationPrice(uint256,bytes32)": FunctionFragment;
+    "getMarginAfterAdjustCollateral(uint256,bytes32,bool,uint256)": FunctionFragment;
+    "getMarginAfterClosePosition(uint256,bytes32,uint256)": FunctionFragment;
+    "getMarginAfterOpenPosition(uint256,bytes32,bool,uint256,uint256,uint256)": FunctionFragment;
+    "getMaxContractSize(uint256,bytes32,bool,uint256,uint256,uint256)": FunctionFragment;
+    "getMaxWithdrawal(uint256,bytes32)": FunctionFragment;
+    "getOpeningFee(uint256,bytes32,bool,uint256,uint256,uint256)": FunctionFragment;
+    "getPNLAfterClosePosition(uint256,bytes32,uint256)": FunctionFragment;
+    "getPositionMargin(uint256,bytes32)": FunctionFragment;
     "getPositionStates(uint256,uint256,uint256)": FunctionFragment;
-    "getUnrealizedPNL(uint256,bytes32,uint256)": FunctionFragment;
+    "getRequiredCollateral(uint256,bytes32,bool,uint256,uint256,uint256,uint256)": FunctionFragment;
+    "getUnrealizedPNL(uint256,bytes32)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "getAllActivePositions",
-    values: [BigNumberish, BigNumberish]
+    values: [BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: "getCollateralWalletBalance",
-    values: [BigNumberish, string, string]
+    functionFragment: "getAveragePrice",
+    values: [
+      BigNumberish,
+      BytesLike,
+      boolean,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
   ): string;
   encodeFunctionData(
-    functionFragment: "getLiquidatePrice",
+    functionFragment: "getBalanceAfterOpenPosition",
+    values: [
+      BigNumberish,
+      BytesLike,
+      boolean,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getBalanceDetails",
     values: [BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getClosingFee",
+    values: [BigNumberish, BytesLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getEntryPrice",
+    values: [
+      BigNumberish,
+      BytesLike,
+      boolean,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getLiqPriceAfterOpenPosition",
+    values: [
+      BigNumberish,
+      BytesLike,
+      boolean,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getLiquidationPrice",
+    values: [BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMarginAfterAdjustCollateral",
+    values: [BigNumberish, BytesLike, boolean, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMarginAfterClosePosition",
+    values: [BigNumberish, BytesLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMarginAfterOpenPosition",
+    values: [
+      BigNumberish,
+      BytesLike,
+      boolean,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "getMaxContractSize",
     values: [
       BigNumberish,
+      BytesLike,
+      boolean,
       BigNumberish,
       BigNumberish,
-      BigNumberish,
-      string,
-      string,
-      string,
       BigNumberish
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMaxWithdrawal",
+    values: [BigNumberish, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getOpeningFee",
+    values: [
+      BigNumberish,
+      BytesLike,
+      boolean,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPNLAfterClosePosition",
+    values: [BigNumberish, BytesLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPositionMargin",
+    values: [BigNumberish, BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "getPositionStates",
     values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getRequiredCollateral",
+    values: [
+      BigNumberish,
+      BytesLike,
+      boolean,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getUnrealizedPNL",
-    values: [BigNumberish, BytesLike, BigNumberish]
+    values: [BigNumberish, BytesLike]
   ): string;
 
   decodeFunctionResult(
@@ -162,11 +281,43 @@ export interface IHelperFutureTradeInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getCollateralWalletBalance",
+    functionFragment: "getAveragePrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "getLiquidatePrice",
+    functionFragment: "getBalanceAfterOpenPosition",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getBalanceDetails",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getClosingFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getEntryPrice",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getLiqPriceAfterOpenPosition",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getLiquidationPrice",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMarginAfterAdjustCollateral",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMarginAfterClosePosition",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getMarginAfterOpenPosition",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -174,7 +325,27 @@ export interface IHelperFutureTradeInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getMaxWithdrawal",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getOpeningFee",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getPNLAfterClosePosition",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getPositionMargin",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getPositionStates",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getRequiredCollateral",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -215,7 +386,6 @@ export interface IHelperFutureTrade extends BaseContract {
   functions: {
     getAllActivePositions(
       nftId: BigNumberish,
-      routerIndex: BigNumberish,
       overrides?: CallOverrides
     ): Promise<
       [HelperBase.PositionDataStructOutput[]] & {
@@ -223,30 +393,152 @@ export interface IHelperFutureTrade extends BaseContract {
       }
     >;
 
-    getCollateralWalletBalance(
+    getAveragePrice(
       nftId: BigNumberish,
-      collateralTokenAddress: string,
-      underlyingTokenAddress: string,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { wallet: BigNumber }>;
+    ): Promise<[BigNumber] & { averagePrice: BigNumber }>;
 
-    getLiquidatePrice(
+    getBalanceAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { balance: BigNumber }>;
+
+    getBalanceDetails(
       nftId: BigNumberish,
       pairByte: BytesLike,
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { liqPrice: BigNumber }>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        freeBalance: BigNumber;
+        usedBalance: BigNumber;
+        totalBalance: BigNumber;
+      }
+    >;
+
+    getClosingFee(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      contractSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        swapFee: BigNumber;
+        tradingFee: BigNumber;
+        totalFee: BigNumber;
+      }
+    >;
+
+    getEntryPrice(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        entryPrice: BigNumber;
+        swapFee: BigNumber;
+        swapSize: BigNumber;
+      }
+    >;
+
+    getLiqPriceAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { liquidationPrice: BigNumber }>;
+
+    getLiquidationPrice(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { liquidationPrice: BigNumber }>;
+
+    getMarginAfterAdjustCollateral(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isAdd: boolean,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { margin: BigNumber }>;
+
+    getMarginAfterClosePosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      closingSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { margin: BigNumber }>;
+
+    getMarginAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { margin: BigNumber }>;
 
     getMaxContractSize(
       nftId: BigNumberish,
-      entryPrice: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
       leverage: BigNumberish,
+      expectedRate: BigNumberish,
       slippage: BigNumberish,
-      collateralTokenAddress: string,
-      swapTokenAddress: string,
-      borrowTokenAddress: string,
-      routerIndex: BigNumberish,
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { maxContractSize: BigNumber }>;
+
+    getMaxWithdrawal(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { maxWithdrawal: BigNumber }>;
+
+    getOpeningFee(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        swapFee: BigNumber;
+        tradingFee: BigNumber;
+        totalFee: BigNumber;
+      }
+    >;
+
+    getPNLAfterClosePosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      closingSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber] & { PNL: BigNumber; ROE: BigNumber }>;
+
+    getPositionMargin(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { margin: BigNumber }>;
 
     getPositionStates(
       nftId: BigNumberish,
@@ -260,48 +552,173 @@ export interface IHelperFutureTrade extends BaseContract {
       }
     >;
 
+    getRequiredCollateral(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      leverage: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { collateral: BigNumber }>;
+
     getUnrealizedPNL(
       nftId: BigNumberish,
       pairByte: BytesLike,
-      routerIndex: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        pnl: BigNumber;
-        rate: BigNumber;
-        percentPNL: BigNumber;
-      }
-    >;
+    ): Promise<[BigNumber, BigNumber] & { PNL: BigNumber; ROE: BigNumber }>;
   };
 
   getAllActivePositions(
     nftId: BigNumberish,
-    routerIndex: BigNumberish,
     overrides?: CallOverrides
   ): Promise<HelperBase.PositionDataStructOutput[]>;
 
-  getCollateralWalletBalance(
+  getAveragePrice(
     nftId: BigNumberish,
-    collateralTokenAddress: string,
-    underlyingTokenAddress: string,
+    pairByte: BytesLike,
+    isLong: boolean,
+    contractSize: BigNumberish,
+    expectedRate: BigNumberish,
+    slippage: BigNumberish,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
-  getLiquidatePrice(
+  getBalanceAfterOpenPosition(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    isLong: boolean,
+    contractSize: BigNumberish,
+    expectedRate: BigNumberish,
+    slippage: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getBalanceDetails(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      freeBalance: BigNumber;
+      usedBalance: BigNumber;
+      totalBalance: BigNumber;
+    }
+  >;
+
+  getClosingFee(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    contractSize: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      swapFee: BigNumber;
+      tradingFee: BigNumber;
+      totalFee: BigNumber;
+    }
+  >;
+
+  getEntryPrice(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    isLong: boolean,
+    contractSize: BigNumberish,
+    expectedRate: BigNumberish,
+    slippage: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      entryPrice: BigNumber;
+      swapFee: BigNumber;
+      swapSize: BigNumber;
+    }
+  >;
+
+  getLiqPriceAfterOpenPosition(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    isLong: boolean,
+    contractSize: BigNumberish,
+    expectedRate: BigNumberish,
+    slippage: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getLiquidationPrice(
     nftId: BigNumberish,
     pairByte: BytesLike,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  getMarginAfterAdjustCollateral(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    isAdd: boolean,
+    amount: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getMarginAfterClosePosition(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    closingSize: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getMarginAfterOpenPosition(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    isLong: boolean,
+    contractSize: BigNumberish,
+    expectedRate: BigNumberish,
+    slippage: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getMaxContractSize(
     nftId: BigNumberish,
-    entryPrice: BigNumberish,
+    pairByte: BytesLike,
+    isLong: boolean,
     leverage: BigNumberish,
+    expectedRate: BigNumberish,
     slippage: BigNumberish,
-    collateralTokenAddress: string,
-    swapTokenAddress: string,
-    borrowTokenAddress: string,
-    routerIndex: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getMaxWithdrawal(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getOpeningFee(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    isLong: boolean,
+    contractSize: BigNumberish,
+    expectedRate: BigNumberish,
+    slippage: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      swapFee: BigNumber;
+      tradingFee: BigNumber;
+      totalFee: BigNumber;
+    }
+  >;
+
+  getPNLAfterClosePosition(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    closingSize: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<[BigNumber, BigNumber] & { PNL: BigNumber; ROE: BigNumber }>;
+
+  getPositionMargin(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
@@ -317,48 +734,173 @@ export interface IHelperFutureTrade extends BaseContract {
     }
   >;
 
+  getRequiredCollateral(
+    nftId: BigNumberish,
+    pairByte: BytesLike,
+    isLong: boolean,
+    contractSize: BigNumberish,
+    leverage: BigNumberish,
+    expectedRate: BigNumberish,
+    slippage: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getUnrealizedPNL(
     nftId: BigNumberish,
     pairByte: BytesLike,
-    routerIndex: BigNumberish,
     overrides?: CallOverrides
-  ): Promise<
-    [BigNumber, BigNumber, BigNumber] & {
-      pnl: BigNumber;
-      rate: BigNumber;
-      percentPNL: BigNumber;
-    }
-  >;
+  ): Promise<[BigNumber, BigNumber] & { PNL: BigNumber; ROE: BigNumber }>;
 
   callStatic: {
     getAllActivePositions(
       nftId: BigNumberish,
-      routerIndex: BigNumberish,
       overrides?: CallOverrides
     ): Promise<HelperBase.PositionDataStructOutput[]>;
 
-    getCollateralWalletBalance(
+    getAveragePrice(
       nftId: BigNumberish,
-      collateralTokenAddress: string,
-      underlyingTokenAddress: string,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getLiquidatePrice(
+    getBalanceAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getBalanceDetails(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        freeBalance: BigNumber;
+        usedBalance: BigNumber;
+        totalBalance: BigNumber;
+      }
+    >;
+
+    getClosingFee(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      contractSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        swapFee: BigNumber;
+        tradingFee: BigNumber;
+        totalFee: BigNumber;
+      }
+    >;
+
+    getEntryPrice(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        entryPrice: BigNumber;
+        swapFee: BigNumber;
+        swapSize: BigNumber;
+      }
+    >;
+
+    getLiqPriceAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getLiquidationPrice(
       nftId: BigNumberish,
       pairByte: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getMarginAfterAdjustCollateral(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isAdd: boolean,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getMarginAfterClosePosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      closingSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getMarginAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getMaxContractSize(
       nftId: BigNumberish,
-      entryPrice: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
       leverage: BigNumberish,
+      expectedRate: BigNumberish,
       slippage: BigNumberish,
-      collateralTokenAddress: string,
-      swapTokenAddress: string,
-      borrowTokenAddress: string,
-      routerIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getMaxWithdrawal(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getOpeningFee(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        swapFee: BigNumber;
+        tradingFee: BigNumber;
+        totalFee: BigNumber;
+      }
+    >;
+
+    getPNLAfterClosePosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      closingSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber, BigNumber] & { PNL: BigNumber; ROE: BigNumber }>;
+
+    getPositionMargin(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -374,18 +916,22 @@ export interface IHelperFutureTrade extends BaseContract {
       }
     >;
 
+    getRequiredCollateral(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      leverage: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getUnrealizedPNL(
       nftId: BigNumberish,
       pairByte: BytesLike,
-      routerIndex: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<
-      [BigNumber, BigNumber, BigNumber] & {
-        pnl: BigNumber;
-        rate: BigNumber;
-        percentPNL: BigNumber;
-      }
-    >;
+    ): Promise<[BigNumber, BigNumber] & { PNL: BigNumber; ROE: BigNumber }>;
   };
 
   filters: {};
@@ -393,32 +939,129 @@ export interface IHelperFutureTrade extends BaseContract {
   estimateGas: {
     getAllActivePositions(
       nftId: BigNumberish,
-      routerIndex: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getCollateralWalletBalance(
+    getAveragePrice(
       nftId: BigNumberish,
-      collateralTokenAddress: string,
-      underlyingTokenAddress: string,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    getLiquidatePrice(
+    getBalanceAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getBalanceDetails(
       nftId: BigNumberish,
       pairByte: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getClosingFee(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      contractSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getEntryPrice(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getLiqPriceAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getLiquidationPrice(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getMarginAfterAdjustCollateral(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isAdd: boolean,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getMarginAfterClosePosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      closingSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getMarginAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getMaxContractSize(
       nftId: BigNumberish,
-      entryPrice: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
       leverage: BigNumberish,
+      expectedRate: BigNumberish,
       slippage: BigNumberish,
-      collateralTokenAddress: string,
-      swapTokenAddress: string,
-      borrowTokenAddress: string,
-      routerIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getMaxWithdrawal(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getOpeningFee(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPNLAfterClosePosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      closingSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPositionMargin(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -429,10 +1072,20 @@ export interface IHelperFutureTrade extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getRequiredCollateral(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      leverage: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getUnrealizedPNL(
       nftId: BigNumberish,
       pairByte: BytesLike,
-      routerIndex: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
@@ -440,32 +1093,129 @@ export interface IHelperFutureTrade extends BaseContract {
   populateTransaction: {
     getAllActivePositions(
       nftId: BigNumberish,
-      routerIndex: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getCollateralWalletBalance(
+    getAveragePrice(
       nftId: BigNumberish,
-      collateralTokenAddress: string,
-      underlyingTokenAddress: string,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    getLiquidatePrice(
+    getBalanceAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getBalanceDetails(
       nftId: BigNumberish,
       pairByte: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getClosingFee(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      contractSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getEntryPrice(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getLiqPriceAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getLiquidationPrice(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getMarginAfterAdjustCollateral(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isAdd: boolean,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getMarginAfterClosePosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      closingSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getMarginAfterOpenPosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getMaxContractSize(
       nftId: BigNumberish,
-      entryPrice: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
       leverage: BigNumberish,
+      expectedRate: BigNumberish,
       slippage: BigNumberish,
-      collateralTokenAddress: string,
-      swapTokenAddress: string,
-      borrowTokenAddress: string,
-      routerIndex: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getMaxWithdrawal(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getOpeningFee(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPNLAfterClosePosition(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      closingSize: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPositionMargin(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -476,10 +1226,20 @@ export interface IHelperFutureTrade extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getRequiredCollateral(
+      nftId: BigNumberish,
+      pairByte: BytesLike,
+      isLong: boolean,
+      contractSize: BigNumberish,
+      leverage: BigNumberish,
+      expectedRate: BigNumberish,
+      slippage: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getUnrealizedPNL(
       nftId: BigNumberish,
       pairByte: BytesLike,
-      routerIndex: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

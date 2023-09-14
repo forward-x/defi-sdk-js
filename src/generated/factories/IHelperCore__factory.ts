@@ -16,6 +16,206 @@ const _abi = [
       },
       {
         internalType: "uint256",
+        name: "loanId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "borrowAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "borrowTokenAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "collateralAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "collateralTokenAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "ltv",
+        type: "uint256",
+      },
+    ],
+    name: "calculateBorrowAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "maxBorrowAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "maxCollateralAmount",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "loanId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "isAdd",
+        type: "bool",
+      },
+    ],
+    name: "calculateLTVForAdjustColla",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "ltv",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "loanId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "borrowAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "borrowTokenAddress",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "collateralAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "collateralTokenAddress",
+        type: "address",
+      },
+    ],
+    name: "calculateLTVForBorrow",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "ltv",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "loanId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "repayAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "isOnlyInterest",
+        type: "bool",
+      },
+    ],
+    name: "calculateLTVForRepay",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "ltv",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "loanId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "gapTimeBorrowInterestSecond",
+        type: "uint256",
+      },
+      {
+        internalType: "bool",
+        name: "isOnlyInterest",
+        type: "bool",
+      },
+    ],
+    name: "calculateMaxRepay",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "maxRepay",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
         name: "cursor",
         type: "uint256",
       },
@@ -104,6 +304,11 @@ const _abi = [
           {
             internalType: "uint256",
             name: "apr",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "minInterestOwed",
             type: "uint256",
           },
           {
@@ -201,6 +406,30 @@ const _abi = [
       {
         internalType: "uint256",
         name: "ltv",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "loanId",
+        type: "uint256",
+      },
+    ],
+    name: "getPenaltyFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "penaltyFee",
         type: "uint256",
       },
     ],

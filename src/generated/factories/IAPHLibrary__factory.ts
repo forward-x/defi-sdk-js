@@ -92,6 +92,11 @@ const _abi = [
         name: "multiplier",
         type: "uint256",
       },
+      {
+        internalType: "uint256",
+        name: "divisor",
+        type: "uint256",
+      },
     ],
     name: "calculatePNL",
     outputs: [

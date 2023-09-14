@@ -60,10 +60,12 @@ export declare namespace HelperBase {
     currentLTV: BigNumberish;
     liquidationLTV: BigNumberish;
     apr: BigNumberish;
+    minInterestOwed: BigNumberish;
     actualInterestOwed: BigNumberish;
   };
 
   export type ActiveLoanInfoStructOutput = [
+    BigNumber,
     BigNumber,
     BigNumber,
     BigNumber,
@@ -74,6 +76,7 @@ export declare namespace HelperBase {
     currentLTV: BigNumber;
     liquidationLTV: BigNumber;
     apr: BigNumber;
+    minInterestOwed: BigNumber;
     actualInterestOwed: BigNumber;
   };
 }
@@ -81,15 +84,56 @@ export declare namespace HelperBase {
 export interface IHelperCoreInterface extends utils.Interface {
   contractName: "IHelperCore";
   functions: {
+    "calculateBorrowAmount(uint256,uint256,uint256,address,uint256,address,uint256)": FunctionFragment;
+    "calculateLTVForAdjustColla(uint256,uint256,uint256,bool)": FunctionFragment;
+    "calculateLTVForBorrow(uint256,uint256,uint256,address,uint256,address)": FunctionFragment;
+    "calculateLTVForRepay(uint256,uint256,uint256,bool)": FunctionFragment;
+    "calculateMaxRepay(uint256,uint256,uint256,bool)": FunctionFragment;
     "getActiveLoans(uint256,uint256,uint256)": FunctionFragment;
     "getLoanBorrowAmount(uint256,uint256)": FunctionFragment;
     "getLoanCollateralInfo(uint256,uint256)": FunctionFragment;
     "getLoanCurrentLTV(uint256,uint256)": FunctionFragment;
+    "getPenaltyFee(uint256,uint256)": FunctionFragment;
     "getSettleBorrowInfo(uint256,uint256)": FunctionFragment;
     "isLoanLiquidable(uint256,uint256)": FunctionFragment;
     "isPool(address)": FunctionFragment;
   };
 
+  encodeFunctionData(
+    functionFragment: "calculateBorrowAmount",
+    values: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      string,
+      BigNumberish,
+      string,
+      BigNumberish
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "calculateLTVForAdjustColla",
+    values: [BigNumberish, BigNumberish, BigNumberish, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "calculateLTVForBorrow",
+    values: [
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      string,
+      BigNumberish,
+      string
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "calculateLTVForRepay",
+    values: [BigNumberish, BigNumberish, BigNumberish, boolean]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "calculateMaxRepay",
+    values: [BigNumberish, BigNumberish, BigNumberish, boolean]
+  ): string;
   encodeFunctionData(
     functionFragment: "getActiveLoans",
     values: [BigNumberish, BigNumberish, BigNumberish]
@@ -107,6 +151,10 @@ export interface IHelperCoreInterface extends utils.Interface {
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getPenaltyFee",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getSettleBorrowInfo",
     values: [BigNumberish, BigNumberish]
   ): string;
@@ -116,6 +164,26 @@ export interface IHelperCoreInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "isPool", values: [string]): string;
 
+  decodeFunctionResult(
+    functionFragment: "calculateBorrowAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateLTVForAdjustColla",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateLTVForBorrow",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateLTVForRepay",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "calculateMaxRepay",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getActiveLoans",
     data: BytesLike
@@ -130,6 +198,10 @@ export interface IHelperCoreInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getLoanCurrentLTV",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getPenaltyFee",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -173,6 +245,56 @@ export interface IHelperCore extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    calculateBorrowAmount(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      borrowAmount: BigNumberish,
+      borrowTokenAddress: string,
+      collateralAmount: BigNumberish,
+      collateralTokenAddress: string,
+      ltv: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        maxBorrowAmount: BigNumber;
+        maxCollateralAmount: BigNumber;
+      }
+    >;
+
+    calculateLTVForAdjustColla(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      amount: BigNumberish,
+      isAdd: boolean,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { ltv: BigNumber }>;
+
+    calculateLTVForBorrow(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      borrowAmount: BigNumberish,
+      borrowTokenAddress: string,
+      collateralAmount: BigNumberish,
+      collateralTokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { ltv: BigNumber }>;
+
+    calculateLTVForRepay(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      repayAmount: BigNumberish,
+      isOnlyInterest: boolean,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { ltv: BigNumber }>;
+
+    calculateMaxRepay(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      gapTimeBorrowInterestSecond: BigNumberish,
+      isOnlyInterest: boolean,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { maxRepay: BigNumber }>;
+
     getActiveLoans(
       nftId: BigNumberish,
       cursor: BigNumberish,
@@ -215,6 +337,12 @@ export interface IHelperCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { ltv: BigNumber }>;
 
+    getPenaltyFee(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { penaltyFee: BigNumber }>;
+
     getSettleBorrowInfo(
       nftId: BigNumberish,
       loanId: BigNumberish,
@@ -236,6 +364,56 @@ export interface IHelperCore extends BaseContract {
 
     isPool(poolAddess: string, overrides?: CallOverrides): Promise<[boolean]>;
   };
+
+  calculateBorrowAmount(
+    nftId: BigNumberish,
+    loanId: BigNumberish,
+    borrowAmount: BigNumberish,
+    borrowTokenAddress: string,
+    collateralAmount: BigNumberish,
+    collateralTokenAddress: string,
+    ltv: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber] & {
+      maxBorrowAmount: BigNumber;
+      maxCollateralAmount: BigNumber;
+    }
+  >;
+
+  calculateLTVForAdjustColla(
+    nftId: BigNumberish,
+    loanId: BigNumberish,
+    amount: BigNumberish,
+    isAdd: boolean,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  calculateLTVForBorrow(
+    nftId: BigNumberish,
+    loanId: BigNumberish,
+    borrowAmount: BigNumberish,
+    borrowTokenAddress: string,
+    collateralAmount: BigNumberish,
+    collateralTokenAddress: string,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  calculateLTVForRepay(
+    nftId: BigNumberish,
+    loanId: BigNumberish,
+    repayAmount: BigNumberish,
+    isOnlyInterest: boolean,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  calculateMaxRepay(
+    nftId: BigNumberish,
+    loanId: BigNumberish,
+    gapTimeBorrowInterestSecond: BigNumberish,
+    isOnlyInterest: boolean,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getActiveLoans(
     nftId: BigNumberish,
@@ -279,6 +457,12 @@ export interface IHelperCore extends BaseContract {
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
+  getPenaltyFee(
+    nftId: BigNumberish,
+    loanId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getSettleBorrowInfo(
     nftId: BigNumberish,
     loanId: BigNumberish,
@@ -301,6 +485,56 @@ export interface IHelperCore extends BaseContract {
   isPool(poolAddess: string, overrides?: CallOverrides): Promise<boolean>;
 
   callStatic: {
+    calculateBorrowAmount(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      borrowAmount: BigNumberish,
+      borrowTokenAddress: string,
+      collateralAmount: BigNumberish,
+      collateralTokenAddress: string,
+      ltv: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber] & {
+        maxBorrowAmount: BigNumber;
+        maxCollateralAmount: BigNumber;
+      }
+    >;
+
+    calculateLTVForAdjustColla(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      amount: BigNumberish,
+      isAdd: boolean,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    calculateLTVForBorrow(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      borrowAmount: BigNumberish,
+      borrowTokenAddress: string,
+      collateralAmount: BigNumberish,
+      collateralTokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    calculateLTVForRepay(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      repayAmount: BigNumberish,
+      isOnlyInterest: boolean,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    calculateMaxRepay(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      gapTimeBorrowInterestSecond: BigNumberish,
+      isOnlyInterest: boolean,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getActiveLoans(
       nftId: BigNumberish,
       cursor: BigNumberish,
@@ -343,6 +577,12 @@ export interface IHelperCore extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getPenaltyFee(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getSettleBorrowInfo(
       nftId: BigNumberish,
       loanId: BigNumberish,
@@ -368,6 +608,51 @@ export interface IHelperCore extends BaseContract {
   filters: {};
 
   estimateGas: {
+    calculateBorrowAmount(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      borrowAmount: BigNumberish,
+      borrowTokenAddress: string,
+      collateralAmount: BigNumberish,
+      collateralTokenAddress: string,
+      ltv: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    calculateLTVForAdjustColla(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      amount: BigNumberish,
+      isAdd: boolean,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    calculateLTVForBorrow(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      borrowAmount: BigNumberish,
+      borrowTokenAddress: string,
+      collateralAmount: BigNumberish,
+      collateralTokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    calculateLTVForRepay(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      repayAmount: BigNumberish,
+      isOnlyInterest: boolean,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    calculateMaxRepay(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      gapTimeBorrowInterestSecond: BigNumberish,
+      isOnlyInterest: boolean,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getActiveLoans(
       nftId: BigNumberish,
       cursor: BigNumberish,
@@ -390,6 +675,12 @@ export interface IHelperCore extends BaseContract {
     getLoanCurrentLTV(
       loanId: BigNumberish,
       nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPenaltyFee(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -409,6 +700,51 @@ export interface IHelperCore extends BaseContract {
   };
 
   populateTransaction: {
+    calculateBorrowAmount(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      borrowAmount: BigNumberish,
+      borrowTokenAddress: string,
+      collateralAmount: BigNumberish,
+      collateralTokenAddress: string,
+      ltv: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    calculateLTVForAdjustColla(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      amount: BigNumberish,
+      isAdd: boolean,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    calculateLTVForBorrow(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      borrowAmount: BigNumberish,
+      borrowTokenAddress: string,
+      collateralAmount: BigNumberish,
+      collateralTokenAddress: string,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    calculateLTVForRepay(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      repayAmount: BigNumberish,
+      isOnlyInterest: boolean,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    calculateMaxRepay(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
+      gapTimeBorrowInterestSecond: BigNumberish,
+      isOnlyInterest: boolean,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getActiveLoans(
       nftId: BigNumberish,
       cursor: BigNumberish,
@@ -431,6 +767,12 @@ export interface IHelperCore extends BaseContract {
     getLoanCurrentLTV(
       loanId: BigNumberish,
       nftId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPenaltyFee(
+      nftId: BigNumberish,
+      loanId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

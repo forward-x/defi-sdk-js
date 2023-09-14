@@ -17,11 +17,6 @@ const _abi = [
         name: "nftId",
         type: "uint256",
       },
-      {
-        internalType: "uint256",
-        name: "routerIndex",
-        type: "uint256",
-      },
     ],
     name: "getAllActivePositions",
     outputs: [
@@ -30,13 +25,8 @@ const _abi = [
           {
             components: [
               {
-                internalType: "uint256",
-                name: "entryPrice",
-                type: "uint256",
-              },
-              {
                 internalType: "uint64",
-                name: "lastSettleTimestamp",
+                name: "id",
                 type: "uint64",
               },
               {
@@ -46,13 +36,8 @@ const _abi = [
               },
               {
                 internalType: "uint64",
-                name: "id",
+                name: "lastSettleTimestamp",
                 type: "uint64",
-              },
-              {
-                internalType: "address",
-                name: "swapTokenAddress",
-                type: "address",
               },
               {
                 internalType: "address",
@@ -60,13 +45,13 @@ const _abi = [
                 type: "address",
               },
               {
-                internalType: "uint256",
-                name: "collateralSwappedAmount",
-                type: "uint256",
+                internalType: "address",
+                name: "swapTokenAddress",
+                type: "address",
               },
               {
                 internalType: "uint256",
-                name: "borrowAmount",
+                name: "entryPrice",
                 type: "uint256",
               },
               {
@@ -76,12 +61,22 @@ const _abi = [
               },
               {
                 internalType: "uint256",
-                name: "interestOwePerDay",
+                name: "borrowAmount",
+                type: "uint256",
+              },
+              {
+                internalType: "uint256",
+                name: "collateralSwappedAmount",
                 type: "uint256",
               },
               {
                 internalType: "uint256",
                 name: "interestOwed",
+                type: "uint256",
+              },
+              {
+                internalType: "uint256",
+                name: "interestOwePerDay",
                 type: "uint256",
               },
             ],
@@ -90,18 +85,18 @@ const _abi = [
             type: "tuple",
           },
           {
-            internalType: "uint256",
-            name: "margin",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "liqPrice",
-            type: "uint256",
+            internalType: "int256",
+            name: "PNL",
+            type: "int256",
           },
           {
             internalType: "int256",
-            name: "pnl",
+            name: "ROE",
+            type: "int256",
+          },
+          {
+            internalType: "int256",
+            name: "margin",
             type: "int256",
           },
           {
@@ -110,9 +105,9 @@ const _abi = [
             type: "uint256",
           },
           {
-            internalType: "int256",
-            name: "percentPNL",
-            type: "int256",
+            internalType: "uint256",
+            name: "liqPrice",
+            type: "uint256",
           },
         ],
         internalType: "struct HelperBase.PositionData[]",
@@ -131,21 +126,80 @@ const _abi = [
         type: "uint256",
       },
       {
-        internalType: "address",
-        name: "collateralTokenAddress",
-        type: "address",
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
       },
       {
-        internalType: "address",
-        name: "underlyingTokenAddress",
-        type: "address",
+        internalType: "bool",
+        name: "isLong",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "contractSize",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "expectedRate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "slippage",
+        type: "uint256",
       },
     ],
-    name: "getCollateralWalletBalance",
+    name: "getAveragePrice",
     outputs: [
       {
         internalType: "uint256",
-        name: "wallet",
+        name: "averagePrice",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "bool",
+        name: "isLong",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "contractSize",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "expectedRate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "slippage",
+        type: "uint256",
+      },
+    ],
+    name: "getBalanceAfterOpenPosition",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "balance",
         type: "uint256",
       },
     ],
@@ -165,11 +219,21 @@ const _abi = [
         type: "bytes32",
       },
     ],
-    name: "getLiquidatePrice",
+    name: "getBalanceDetails",
     outputs: [
       {
         internalType: "uint256",
-        name: "liqPrice",
+        name: "freeBalance",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "usedBalance",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "totalBalance",
         type: "uint256",
       },
     ],
@@ -184,9 +248,282 @@ const _abi = [
         type: "uint256",
       },
       {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "contractSize",
+        type: "uint256",
+      },
+    ],
+    name: "getClosingFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "swapFee",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "tradingFee",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "totalFee",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "bool",
+        name: "isLong",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "contractSize",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "expectedRate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "slippage",
+        type: "uint256",
+      },
+    ],
+    name: "getEntryPrice",
+    outputs: [
+      {
         internalType: "uint256",
         name: "entryPrice",
         type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "swapFee",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "swapSize",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "bool",
+        name: "isLong",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "contractSize",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "expectedRate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "slippage",
+        type: "uint256",
+      },
+    ],
+    name: "getLiqPriceAfterOpenPosition",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "liquidationPrice",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+    ],
+    name: "getLiquidationPrice",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "liquidationPrice",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "bool",
+        name: "isAdd",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "getMarginAfterAdjustCollateral",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "margin",
+        type: "int256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "closingSize",
+        type: "uint256",
+      },
+    ],
+    name: "getMarginAfterClosePosition",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "margin",
+        type: "int256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "bool",
+        name: "isLong",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "contractSize",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "expectedRate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "slippage",
+        type: "uint256",
+      },
+    ],
+    name: "getMarginAfterOpenPosition",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "margin",
+        type: "int256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "bool",
+        name: "isLong",
+        type: "bool",
       },
       {
         internalType: "uint256",
@@ -195,27 +532,12 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "slippage",
+        name: "expectedRate",
         type: "uint256",
       },
       {
-        internalType: "address",
-        name: "collateralTokenAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "swapTokenAddress",
-        type: "address",
-      },
-      {
-        internalType: "address",
-        name: "borrowTokenAddress",
-        type: "address",
-      },
-      {
         internalType: "uint256",
-        name: "routerIndex",
+        name: "slippage",
         type: "uint256",
       },
     ],
@@ -225,6 +547,142 @@ const _abi = [
         internalType: "uint256",
         name: "maxContractSize",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+    ],
+    name: "getMaxWithdrawal",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "maxWithdrawal",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "bool",
+        name: "isLong",
+        type: "bool",
+      },
+      {
+        internalType: "uint256",
+        name: "contractSize",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "expectedRate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "slippage",
+        type: "uint256",
+      },
+    ],
+    name: "getOpeningFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "swapFee",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "tradingFee",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "totalFee",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "closingSize",
+        type: "uint256",
+      },
+    ],
+    name: "getPNLAfterClosePosition",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "PNL",
+        type: "int256",
+      },
+      {
+        internalType: "int256",
+        name: "ROE",
+        type: "int256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+    ],
+    name: "getPositionMargin",
+    outputs: [
+      {
+        internalType: "int256",
+        name: "margin",
+        type: "int256",
       },
     ],
     stateMutability: "view",
@@ -287,6 +745,16 @@ const _abi = [
             name: "interestPaid",
             type: "uint128",
           },
+          {
+            internalType: "uint128",
+            name: "totalTradingFee",
+            type: "uint128",
+          },
+          {
+            internalType: "uint128",
+            name: "totalSwapFee",
+            type: "uint128",
+          },
         ],
         internalType: "struct CoreBase.PositionState[]",
         name: "positionStates",
@@ -314,26 +782,65 @@ const _abi = [
         type: "bytes32",
       },
       {
+        internalType: "bool",
+        name: "isLong",
+        type: "bool",
+      },
+      {
         internalType: "uint256",
-        name: "routerIndex",
+        name: "contractSize",
         type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "leverage",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "expectedRate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "slippage",
+        type: "uint256",
+      },
+    ],
+    name: "getRequiredCollateral",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "collateral",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
       },
     ],
     name: "getUnrealizedPNL",
     outputs: [
       {
         internalType: "int256",
-        name: "pnl",
+        name: "PNL",
         type: "int256",
       },
       {
-        internalType: "uint256",
-        name: "rate",
-        type: "uint256",
-      },
-      {
         internalType: "int256",
-        name: "percentPNL",
+        name: "ROE",
         type: "int256",
       },
     ],

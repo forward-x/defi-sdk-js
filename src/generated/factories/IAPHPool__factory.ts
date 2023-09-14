@@ -244,12 +244,12 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "interestRate",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "interestOwedPerDay",
         type: "uint256",
       },
     ],
@@ -498,7 +498,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "_currentSupply",
         type: "uint256",
       },
     ],
@@ -571,7 +571,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "ifpPrice",
         type: "uint256",
       },
     ],
@@ -584,7 +584,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "itpPrice",
         type: "uint256",
       },
     ],
@@ -603,7 +603,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "nextInterestRate",
         type: "uint256",
       },
     ],
@@ -752,7 +752,7 @@ const _abi = [
       },
       {
         internalType: "address",
-        name: "underlyingTokenAddress",
+        name: "swapTokenAddress",
         type: "address",
       },
       {
@@ -772,7 +772,7 @@ const _abi = [
       },
       {
         internalType: "uint256",
-        name: "slipPage",
+        name: "slippage",
         type: "uint256",
       },
     ],
@@ -938,7 +938,7 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "_utilizationRate",
         type: "uint256",
       },
     ],

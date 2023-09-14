@@ -104,7 +104,7 @@ const _abi = [
           },
         ],
         internalType: "struct CoreBase.Loan",
-        name: "",
+        name: "loan",
         type: "tuple",
       },
     ],
@@ -255,11 +255,40 @@ const _abi = [
           },
         ],
         internalType: "struct CoreBase.Loan",
-        name: "",
+        name: "loan",
         type: "tuple",
       },
     ],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "nftId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "newAmount",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "tokenAddress",
+        type: "address",
+      },
+    ],
+    name: "checkStakingAmountSufficient",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -489,6 +518,19 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "forwStakingMultiplier",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "forwTradingVaultAddress",
     outputs: [
       {
@@ -503,84 +545,111 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "bool",
+        name: "isExactOutput",
+        type: "bool",
+      },
+      {
+        internalType: "bool",
+        name: "extractSwapFee",
+        type: "bool",
+      },
+      {
         internalType: "uint256",
-        name: "nftId",
+        name: "routerIndex",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "cursor",
+        name: "amountInput",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "src",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "dst",
+        type: "address",
+      },
+    ],
+    name: "getAmounts",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "amounts",
+        type: "uint256[]",
+      },
+      {
+        internalType: "uint256",
+        name: "swapFee",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "router",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bool",
+        name: "isExactOutput",
+        type: "bool",
+      },
+      {
+        internalType: "bytes32",
+        name: "pairByte",
+        type: "bytes32",
+      },
+      {
+        internalType: "uint256",
+        name: "amountInput",
+        type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "src",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "dst",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "expectedRate",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "resultPerPage",
+        name: "slippage",
         type: "uint256",
       },
     ],
-    name: "getActiveLoans",
+    name: "getAmountsWithRouterSelection",
     outputs: [
       {
-        components: [
-          {
-            internalType: "uint256",
-            name: "interestPaid",
-            type: "uint256",
-          },
-          {
-            internalType: "address",
-            name: "borrowTokenAddress",
-            type: "address",
-          },
-          {
-            internalType: "uint64",
-            name: "rolloverTimestamp",
-            type: "uint64",
-          },
-          {
-            internalType: "uint64",
-            name: "lastSettleTimestamp",
-            type: "uint64",
-          },
-          {
-            internalType: "address",
-            name: "collateralTokenAddress",
-            type: "address",
-          },
-          {
-            internalType: "uint256",
-            name: "borrowAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "collateralAmount",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "owedPerDay",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "minInterest",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "interestOwed",
-            type: "uint256",
-          },
-        ],
-        internalType: "struct CoreBase.Loan[]",
-        name: "activaLoans",
-        type: "tuple[]",
+        internalType: "uint256[]",
+        name: "amounts",
+        type: "uint256[]",
       },
       {
         internalType: "uint256",
-        name: "newCursor",
+        name: "swapFee",
         type: "uint256",
+      },
+      {
+        internalType: "address",
+        name: "router",
+        type: "address",
       },
     ],
     stateMutability: "view",
@@ -635,6 +704,11 @@ const _abi = [
         name: "pairByte",
         type: "bytes32",
       },
+      {
+        internalType: "bool",
+        name: "isLiquidate",
+        type: "bool",
+      },
     ],
     name: "getPositionMargin",
     outputs: [
@@ -664,7 +738,7 @@ const _abi = [
     inputs: [
       {
         internalType: "address",
-        name: "poolAddess",
+        name: "poolAddress",
         type: "address",
       },
     ],
@@ -715,17 +789,22 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "repayBorrow",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "repayInterest",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "bountyReward",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "leftOverCollateral",
         type: "uint256",
       },
     ],
@@ -748,6 +827,19 @@ const _abi = [
     name: "liquidatePosition",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "liquidationFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -805,6 +897,16 @@ const _abi = [
           {
             internalType: "uint256",
             name: "maxOraclePriceDiffPercent",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "maxLiquidationOraclePriceDiffPercent",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "minimumCollateralInUSD",
             type: "uint256",
           },
         ],
@@ -1073,7 +1175,7 @@ const _abi = [
           },
         ],
         internalType: "struct APHLibrary.OpenPositionParams",
-        name: "",
+        name: "params",
         type: "tuple",
       },
       {
@@ -1095,7 +1197,7 @@ const _abi = [
           },
         ],
         internalType: "struct APHLibrary.TokenAddressParams",
-        name: "",
+        name: "addressParams",
         type: "tuple",
       },
     ],
@@ -1266,7 +1368,12 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "bountyFeeRate",
+            name: "bountyFeeRateToProtocol",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "bountyFeeRateToLiquidator",
             type: "uint256",
           },
           {
@@ -1350,6 +1457,16 @@ const _abi = [
             name: "interestPaid",
             type: "uint128",
           },
+          {
+            internalType: "uint128",
+            name: "totalTradingFee",
+            type: "uint128",
+          },
+          {
+            internalType: "uint128",
+            name: "totalSwapFee",
+            type: "uint128",
+          },
         ],
         internalType: "struct CoreBase.PositionState",
         name: "",
@@ -1377,13 +1494,8 @@ const _abi = [
       {
         components: [
           {
-            internalType: "uint256",
-            name: "entryPrice",
-            type: "uint256",
-          },
-          {
             internalType: "uint64",
-            name: "lastSettleTimestamp",
+            name: "id",
             type: "uint64",
           },
           {
@@ -1393,13 +1505,8 @@ const _abi = [
           },
           {
             internalType: "uint64",
-            name: "id",
+            name: "lastSettleTimestamp",
             type: "uint64",
-          },
-          {
-            internalType: "address",
-            name: "swapTokenAddress",
-            type: "address",
           },
           {
             internalType: "address",
@@ -1407,13 +1514,13 @@ const _abi = [
             type: "address",
           },
           {
-            internalType: "uint256",
-            name: "collateralSwappedAmount",
-            type: "uint256",
+            internalType: "address",
+            name: "swapTokenAddress",
+            type: "address",
           },
           {
             internalType: "uint256",
-            name: "borrowAmount",
+            name: "entryPrice",
             type: "uint256",
           },
           {
@@ -1423,12 +1530,22 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "interestOwePerDay",
+            name: "borrowAmount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "collateralSwappedAmount",
             type: "uint256",
           },
           {
             internalType: "uint256",
             name: "interestOwed",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "interestOwePerDay",
             type: "uint256",
           },
         ],
@@ -1480,12 +1597,12 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "borrowPaid",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "interestPaid",
         type: "uint256",
       },
     ],
@@ -1509,12 +1626,12 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "",
+        name: "delayInterest",
         type: "uint256",
       },
       {
         internalType: "uint256",
-        name: "",
+        name: "collateralBountyReward",
         type: "uint256",
       },
     ],
@@ -1589,17 +1706,12 @@ const _abi = [
           },
           {
             internalType: "uint256",
-            name: "maxAmountInToken0Size",
+            name: "maxSwapSize",
             type: "uint256",
           },
           {
             internalType: "uint256",
-            name: "maxAmountInToken1Size",
-            type: "uint256",
-          },
-          {
-            internalType: "uint256",
-            name: "maxRouterPriceDiffPercent",
+            name: "maxPriceImpact",
             type: "uint256",
           },
           {
@@ -1629,12 +1741,50 @@ const _abi = [
         type: "address",
       },
     ],
+    name: "swapFeeRates",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
     name: "swapableToken",
     outputs: [
       {
         internalType: "bool",
         name: "",
         type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "tokenPrecisionUnit",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
       },
     ],
     stateMutability: "view",

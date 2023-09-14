@@ -34,6 +34,7 @@ export interface IInterestVaultInterface extends utils.Interface {
     "setForwAddress(address)": FunctionFragment;
     "setProtocolAddress(address)": FunctionFragment;
     "setTokenAddress(address)": FunctionFragment;
+    "setTreasuryAddress(address)": FunctionFragment;
     "settleInterest(uint256,uint256,uint256)": FunctionFragment;
     "tokenAddress()": FunctionFragment;
     "unPause(bytes4)": FunctionFragment;
@@ -93,6 +94,10 @@ export interface IInterestVaultInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "setTokenAddress",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setTreasuryAddress",
     values: [string]
   ): string;
   encodeFunctionData(
@@ -168,6 +173,10 @@ export interface IInterestVaultInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setTokenAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setTreasuryAddress",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -270,6 +279,11 @@ export interface IInterestVault extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    setTreasuryAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     settleInterest(
       _claimableTokenInterest: BigNumberish,
       _heldTokenInterest: BigNumberish,
@@ -346,6 +360,11 @@ export interface IInterestVault extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  setTreasuryAddress(
+    _address: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   settleInterest(
     _claimableTokenInterest: BigNumberish,
     _heldTokenInterest: BigNumberish,
@@ -414,6 +433,11 @@ export interface IInterestVault extends BaseContract {
     ): Promise<void>;
 
     setTokenAddress(_address: string, overrides?: CallOverrides): Promise<void>;
+
+    setTreasuryAddress(
+      _address: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     settleInterest(
       _claimableTokenInterest: BigNumberish,
@@ -487,6 +511,11 @@ export interface IInterestVault extends BaseContract {
     ): Promise<BigNumber>;
 
     setTokenAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setTreasuryAddress(
       _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -576,6 +605,11 @@ export interface IInterestVault extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     setTokenAddress(
+      _address: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setTreasuryAddress(
       _address: string,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
