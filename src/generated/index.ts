@@ -7,3 +7,4 @@ export { IHelperMembershipAndStakePool__factory } from "./factories/IHelperMembe
 export { IHelperPool__factory } from "./factories/IHelperPool__factory";
 export { IInterestVault__factory } from "./factories/IInterestVault__factory";
 export { IMembership__factory } from "./factories/IMembership__factory";
+export { IStakePool__factory } from "./factories/IStakePool__factory";
