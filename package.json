@@ -9,10 +9,13 @@
     "lint": "tsdx lint src",
     "build": "tsdx build",
     "start": "tsdx watch",
-    "prepublishOnly": "tsdx build"
+    "prepublishOnly": "tsdx build",
+    "clean": "rimraf dist",
+    "prepare": "rimraf dist && tsdx build"
   },
   "devDependencies": {
     "ethers": "^5.7.2",
-    "tsdx": "^0.14.1"
+    "tsdx": "^0.14.1",
+    "rimraf": "^5.0.0"
   }
 }
