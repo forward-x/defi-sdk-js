@@ -6,23 +6,23 @@
 
 ```js
 const { ethers } = require("ethers");
-var FORWARD_SDK = require("defi-sdk-js");
+let FORWARD_SDK = require("defi-sdk-js");
 
-var provider = new ethers.providers.JsonRpcProvider(HOST);
-var signer = new ethers.Wallet(PRIVATE_KEY, provider);
+let provider = new ethers.providers.JsonRpcProvider(HOST);
+let signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
-var IAPHCore = FORWARD_SDK.IAPHCore__factory.connect(CORE_ADDRESS, signer);
-var IMembership = FORWARD_SDK.IMembership__factory.connect(
-  MEMBERSHIP_ADDRESS,
+let IAPHCore = FORWARD_SDK.IAPHCore__factory.connect(FORWARD_SDK.ADDRESS.AVAX.UAT.CORE_MODULE.PROXY, provider);
+let IMembership = FORWARD_SDK.IMembership__factory.connect(
+  FORWARD_SDK.ADDRESS.AVAX.UAT.MEMBERSHIP_MODULE.MEMBERSHIP,
   provider
 );
 
 let nftId = await IMembership.getDefaultMembership(signer.address);
 let amount = ethers.BigNumber.from("100000");
-await IAPHCore.depositCollateral(
+await IAPHCore.connect(signer).depositCollateral(
   nftId,
-  TOKEN_ADDRESS.USDT,
-  TOKEN_ADDRESS.ETH,
+  FORWARD_SDK.ADDRESS.AVAX.UAT.TOKEN.USDC,
+  FORWARD_SDK.ADDRESS.AVAX.UAT.TOKEN.ETH,
   amount
 );
 ```
@@ -36,18 +36,18 @@ var FORWARD_SDK = require("defi-sdk-js");
 var provider = new ethers.providers.JsonRpcProvider(HOST);
 var signer = new ethers.Wallet(PRIVATE_KEY, provider);
 
-var IAPHCore = FORWARD_SDK.IAPHCore__factory.connect(CORE_ADDRESS, signer);
-var IMembership = FORWARD_SDK.IMembership__factory.connect(
-  MEMBERSHIP_ADDRESS,
+let IAPHCore = FORWARD_SDK.IAPHCore__factory.connect(FORWARD_SDK.ADDRESS.AVAX.UAT.CORE_MODULE.PROXY, provider);
+let IMembership = FORWARD_SDK.IMembership__factory.connect(
+  FORWARD_SDK.ADDRESS.AVAX.UAT.MEMBERSHIP_MODULE.MEMBERSHIP,
   provider
 );
 
 let nftId = await IMembership.getDefaultMembership(signer.address);
 let amount = ethers.BigNumber.from("100000");
-await IAPHCore.withdrawCollateral(
+await IAPHCore.connect(signer).depositCollateral(
   nftId,
-  TOKEN_ADDRESS.USDT,
-  TOKEN_ADDRESS.ETH,
+  FORWARD_SDK.ADDRESS.AVAX.UAT.TOKEN.USDC,
+  FORWARD_SDK.ADDRESS.AVAX.UAT.TOKEN.ETH,
   amount
 );
 ```
