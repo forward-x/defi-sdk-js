@@ -6,16 +6,23 @@
   "repository": "git@github.com:forward-x/defi-sdk-js.git",
   "author": "nedondev <nedondev@gmail.com>",
   "scripts": {
-    "lint": "tsdx lint src",
+    "lint": "npx eslint --ext .ts",
     "build": "tsdx build",
     "start": "tsdx watch",
     "prepublishOnly": "tsdx build",
     "clean": "rimraf dist",
-    "prepare": "rimraf dist && tsdx build"
+    "prepare": "husky install",
+    "precommit": "npm run lint"
   },
   "devDependencies": {
+    "@types/babel__core": "^7.20.3",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
     "ethers": "^5.7.2",
+    "husky": "^8.0.3",
+    "rimraf": "^5.0.0",
     "tsdx": "^0.14.1",
-    "rimraf": "^5.0.0"
+    "typescript": "^3.9.10"
   }
 }
