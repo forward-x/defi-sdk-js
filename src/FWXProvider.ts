@@ -1,13 +1,14 @@
 import { BigNumberish, ethers, providers } from 'ethers';
-import { ADDRESS, TokenSymbols } from './constants';
+import { ADDRESS, /*PoolAddress,*/ /*TokenSymbols*/ } from './constants';
 import {
   IHelperMembershipAndStakePool,
   IHelperMembershipAndStakePool__factory,
   IMembership,
   IMembership__factory,
-  IStakePool,
-  IStakePool__factory,
-  StakePoolBase
+  // IStakePool,
+  // IStakePool__factory,
+  StakePoolBase,
+  //  CoreBase
 } from './generated';
 
 export enum ProviderType {
@@ -20,7 +21,7 @@ export class FWXProvider {
   signer!: ethers.Wallet;
 
   private membership: IMembership | null = null;
-  private stakePool: IStakePool | null = null;
+  // private stakePool: IStakePool | null = null;
   private helperMembershipAndStakePool: IHelperMembershipAndStakePool | null = null;
 
   constructor(url: string, type: ProviderType, provider?: ethers.providers.JsonRpcProvider) {
@@ -67,10 +68,10 @@ export class FWXProvider {
    * @returns {IStakePool} An instance of IStakePool.
    * @private
    */
-  private _stakePool(): IStakePool {
-    if (this.stakePool) return this.stakePool;
-    return IStakePool__factory.connect(ADDRESS.AVAX.STAKEPOOL, this.provider);
-  }
+  // private _stakePool(): IStakePool {
+  //   if (this.stakePool) return this.stakePool;
+  //   return IStakePool__factory.connect(ADDRESS.AVAX.STAKEPOOL, this.provider);
+  // }
 
   /**
    * Get an instance of IHelperMembershipAndStakePool.
@@ -94,10 +95,10 @@ export class FWXProvider {
    * @throws {Error} Throws an error if the pool address is not found.
    * @private
    */
-  private _poolAddress(symbol: TokenSymbols): string {
-    if (!ADDRESS.AVAX.POOL?.[symbol]) throw Error('TODO: add msg');
-    return ADDRESS.AVAX.POOL[symbol] ?? '';
-  }
+  // private _poolAddress(symbol: TokenSymbols): string {
+  //   if (!ADDRESS.AVAX.POOL?.[symbol]) throw Error('TODO: add msg');
+  //   return ADDRESS.AVAX.POOL[symbol] ?? '';
+  // }
 
   /**
    * Mint a Membership NFT with the given referral.
@@ -267,7 +268,7 @@ export class FWXProvider {
   // async getLendingInfo(pool: TokenSymbols, nftId: BigNumberish): Promise<{ lendingBalance: BigNumberish, interestObtained: BigNumberish, interestFwxObtained: BigNumberish, rank: BigNumberish, rankInfo: StakePoolBase.RankInfoStruct }> {
   // }
 
-  // // ### getLendingInfoPlatform ??? What is this for
+  // // ### getLendingInfoPlatform
 
   // // - **Instance**: APHPool
   // // - **Parameters**
@@ -435,132 +436,144 @@ export class FWXProvider {
   // //     - slippage: BigNumberish
   // // - **Output**
   // //     - result: CoreBase.Position (struct from solidity)
-  // async openPosition(isLong: boolean, collateral: TokenSymbols, underlying: TokenSymbols, nftId: BigNumberish, entryPrice: BigNumberish, contracSize: BigNumberish, leverage: BigNumberish, slippage: BigNumberish): Promise<{ interestRate: BigNumberish, interestOwedPerDay: BigNumberish }> {
+  // async openPosition(isLong: boolean, collateral: TokenSymbols, underlying: TokenSymbols, nftId: BigNumberish, entryPrice: BigNumberish, contracSize: BigNumberish, leverage: BigNumberish, slippage: BigNumberish): Promise<{ result: CoreBase.PositionStruct }> {
   // }
 
-  // ### closePosition
+  // // ### closePosition
 
-  // - **Instance**: APHCore
-  // - **Parameters**
-  //     - nftId: BigNumberish
-  //     - posId: BigNumberish
-  //     - closingSize: BigNumberish
-  // - **Output**
-  //     - result: CoreBase.Position (struct from solidity)
+  // // - **Instance**: APHCore
+  // // - **Parameters**
+  // //     - nftId: BigNumberish
+  // //     - posId: BigNumberish
+  // //     - closingSize: BigNumberish
+  // // - **Output**
+  // //     - result: CoreBase.Position (struct from solidity)
+  // async closePosition(nftId: BigNumberish, posId: BigNumberish, closingSize: BigNumberish): Promise<{ result: CoreBase.PositionStruct }> {
+  // }
 
-  // ### depositCollateral
+  // // ### depositCollateral
 
-  // - **Instance**: APHCore
-  // - **Parameters**
-  //     - collateral: TokenSymbols
-  //     - underlying: TokenSymbols
-  //     - nftId: BigNumberish
-  //     - amount: BigNumberish
-  // - **Output**
-  //     - balance: BigNumberish
+  // // - **Instance**: APHCore
+  // // - **Parameters**
+  // //     - collateral: TokenSymbols
+  // //     - underlying: TokenSymbols
+  // //     - nftId: BigNumberish
+  // //     - amount: BigNumberish
+  // // - **Output**
+  // //     - balance: BigNumberish
+  // async depositCollateral(nftId: BigNumberish, posId: BigNumberish, closingSize: BigNumberish): Promise<{ balance: BigNumberish }> {
+  // }
 
-  // ### withdrawCollateral
+  // // ### withdrawCollateral
 
-  // - **Instance**: APHCore
-  // - **Parameters**
-  //     - collateral: TokenSymbols
-  //     - underlying: TokenSymbols
-  //     - nftId: BigNumberish
-  //     - amount: BigNumberish
-  // - **Output**
-  //     - balance: BigNumberish
+  // // - **Instance**: APHCore
+  // // - **Parameters**
+  // //     - collateral: TokenSymbols
+  // //     - underlying: TokenSymbols
+  // //     - nftId: BigNumberish
+  // //     - amount: BigNumberish
+  // // - **Output**
+  // //     - balance: BigNumberish
+  // async withdrawCollateral(collateral: TokenSymbols, underlying: TokenSymbols, nftId: BigNumberish, amount: BigNumberish): Promise<{ balance: BigNumberish }> {
+  // }
 
-  // ### getPositionInfo
+  // // ### getPositionInfo
 
-  // - **Instance**: APHCore
-  // - **Parameters**
-  //     - nftId: BigNumberish
-  //     - collateral: TokenSymbols
-  //     - underlying: TokenSymbols
-  // - **Output**
-  //     - id: BigNumberish
-  //     - entryPrice: BigNumberish
-  //     - contractSize: BigNumberish
-  //     - borrowAmount: BigNumberish
-  //     - collateralUsed: BigNumberish (collateral swapped)
-  //     - interestOwed: BigNumberish
-  //     - interestOwedPerDay: BigNumberish
-  //     - lastSettleTimstamp: BigNumberish
+  // // - **Instance**: APHCore
+  // // - **Parameters**
+  // //     - nftId: BigNumberish
+  // //     - collateral: TokenSymbols
+  // //     - underlying: TokenSymbols
+  // // - **Output**
+  // //     - id: BigNumberish
+  // //     - entryPrice: BigNumberish
+  // //     - contractSize: BigNumberish
+  // //     - borrowAmount: BigNumberish
+  // //     - collateralUsed: BigNumberish (collateral swapped)
+  // //     - interestOwed: BigNumberish
+  // //     - interestOwedPerDay: BigNumberish
+  // //     - lastSettleTimstamp: BigNumberish
+  // async getPositionInfo(nftId: BigNumberish,  collateral: TokenSymbols,  underlying: TokenSymbols): Promise<{id: BigNumberish,  entryPrice: BigNumberish,  contractSize: BigNumberish,  borrowAmount: BigNumberish,  collateralUsed: BigNumberish (collateral swapped),  interestOwed: BigNumberish,  interestOwedPerDay: BigNumberish,  lastSettleTimstamp: BigNumberish}>{}
 
-  // ### getAllActivePosition
+  // // ### getAllActivePosition
 
-  // - **Instance**: APHCore
-  // - **Parameters**
-  //     - nftId: BigNumberish
-  //     - pairs: Array of object {collateral: TokenSymbols, underlying: TokenSymbols}
-  // - **Output**
-  //     - **Array** of Positions
-  //         - id: BigNumberish
-  //         - entryPrice: BigNumberish
-  //         - contractSize: BigNumberish
-  //         - borrowAmount: BigNumberish
-  //         - collateralUsed: BigNumberish (collateral swapped)
-  //         - interestOwed: BigNumberish
-  //         - interestOwedPerDay: BigNumberish
-  //         - lastSettleTimstamp: BigNumberish
+  // // - **Instance**: APHCore
+  // // - **Parameters**
+  // //     - nftId: BigNumberish
+  // //     - pairs: Array of object {collateral: TokenSymbols, underlying: TokenSymbols}
+  // // - **Output**
+  // //     - **Array** of Positions
+  // //         - id: BigNumberish
+  // //         - entryPrice: BigNumberish
+  // //         - contractSize: BigNumberish
+  // //         - borrowAmount: BigNumberish
+  // //         - collateralUsed: BigNumberish (collateral swapped)
+  // //         - interestOwed: BigNumberish
+  // //         - interestOwedPerDay: BigNumberish
+  // //         - lastSettleTimstamp: BigNumberish
+  // async getAllActivePosition(nftId: BigNumberish,  pairs: {collateral: TokenSymbols, underlying: TokenSymbols}[]) : Promise<{id: BigNumberish,  entryPrice: BigNumberish,  contractSize: BigNumberish,  borrowAmount: BigNumberish,  collateralUsed: BigNumberish (collateral swapped),  interestOwed: BigNumberish,  interestOwedPerDay: BigNumberish,  lastSettleTimstamp: BigNumberish}[]>{}
 
-  // ### getPositionStateInfo
+  // // ### getPositionStateInfo
 
-  // - **Instance**: APHCore
-  // - **Parameters**
-  //     - nftId: BigNumberish
-  //     - posId: BigNumberish
-  // - **Output**
-  //     - active: boolean
-  //     - isLong: boolean
-  //     - PNL: BigNumberish
-  //     - averateEntryProce: BigNumberish
-  //     - startTimstamp: BigNumberish
-  //     - interestPaid: BigNumberish
-  //     - totalSwapFeePaid: BigNumberish
-  //     - totalTradingFeePaid: BigNumberish
+  // // - **Instance**: APHCore
+  // // - **Parameters**
+  // //     - nftId: BigNumberish
+  // //     - posId: BigNumberish
+  // // - **Output**
+  // //     - active: boolean
+  // //     - isLong: boolean
+  // //     - PNL: BigNumberish
+  // //     - averateEntryProce: BigNumberish
+  // //     - startTimstamp: BigNumberish
+  // //     - interestPaid: BigNumberish
+  // //     - totalSwapFeePaid: BigNumberish
+  // //     - totalTradingFeePaid: BigNumberish
+  // async getPositionStateInfo(nftId: BigNumberish,  posId: BigNumberish):Promise<{active: boolean,  isLong: boolean,  PNL: BigNumberish,  averateEntryProce: BigNumberish,  startTimstamp: BigNumberish,  interestPaid: BigNumberish,  totalSwapFeePaid: BigNumberish,  totalTradingFeePaid: BigNumberish}>{}
 
-  // ### getCurrentMargin
+  // // ### getCurrentMargin
 
-  // - **Instance**: APHCore
-  // - **Parameters**
-  //     - nftId: BigNumberish
-  //     - collateral: TokenSymbols
-  //     - underlying: TokenSymbols
-  // - **Output**
-  //     - PNL: BigNumberish (optional, can be separated to another function)
-  //     - margin: BigNumberish
+  // // - **Instance**: APHCore
+  // // - **Parameters**
+  // //     - nftId: BigNumberish
+  // //     - collateral: TokenSymbols
+  // //     - underlying: TokenSymbols
+  // // - **Output**
+  // //     - PNL: BigNumberish
+  // //     - margin: BigNumberish
+  // async getCurrentMargin(nftId: BigNumberish,  collateral: TokenSymbols,  underlying: TokenSymbols):Promise<{PNL: BigNumberish,  margin: BigNumberish}>{}
 
-  // ### getAvailableCollateral
+  // // ### getAvailableCollateral
 
-  // - **Instance**: APHCore
-  // - **Parameters**
-  //     - nftId: BigNumberish
-  //     - collateral: TokenSymbols
-  //     - underlying: TokenSymbols
-  // - **Output**
-  //     - freeBalance: BigNumberish
-  //     - usedBalance: BigNumberish
-  //     - totalBalance: BigNumberish
+  // // - **Instance**: APHCore
+  // // - **Parameters**
+  // //     - nftId: BigNumberish
+  // //     - collateral: TokenSymbols
+  // //     - underlying: TokenSymbols
+  // // - **Output**
+  // //     - freeBalance: BigNumberish
+  // //     - usedBalance: BigNumberish
+  // //     - totalBalance: BigNumberish
+  // async getAvailableCollateral(nftId: BigNumberish,  collateral: TokenSymbols,  underlying: TokenSymbols):Promise<{freeBalance: BigNumberish,  usedBalance: BigNumberish,  totalBalance: BigNumberish}>{}
 
-  // ## Utils
+  // // ## Utils
 
-  // ### approve
+  // // ### approve
 
-  // - **Instance**: ERC20
-  // - **Parameters**
-  //     - spender: ?? We should define some enum to help user access our protocol contracts without knowing addresses, e.g., “core”, “pool”
-  //     - amount: BigNumberish
-  // - **Output**
-  //     - allowance: BigNumberish
+  // // - **Instance**: ERC20
+  // // - **Parameters**
+  // //     - spender: 'CORE' | PoolAddress
+  // //     - amount: BigNumberish
+  // // - **Output**
+  // //     - allowance: BigNumberish
+  // async approve(spender: 'CORE' | PoolAddress,amount: BigNumberish):Promise<{allowance: BigNumberish}>{}
+  // // ### getProtocolAllowance
 
-  // ### getProtocolAllowance
-
-  // - **Instance**: ERC20
-  // - **Parameters**
-  //     - spender: “POOL” or “CORE”
-  //     - token: TokenSymbols
-  //     - amount: BigNumberish
-  // - **Output**
-  //     - allowance: BigNumberish
+  // // - **Instance**: ERC20
+  // // - **Parameters**
+  // //     - spender: “POOL” or “CORE”
+  // //     - token: TokenSymbols
+  // //     - amount: BigNumberish
+  // // - **Output**
+  // //     - allowance: BigNumberish
+  // async getProtocolAllowance(spender: 'CORE' | PoolAddress,  token: TokenSymbols,  amount: BigNumberish):Promise<{allowance: BigNumberish}>{}
 }
