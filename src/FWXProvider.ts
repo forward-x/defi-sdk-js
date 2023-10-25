@@ -105,11 +105,19 @@ export class FWXProvider {
    * @param referral - The referral as a BigNumberish.
    * @returns An object containing the tokenId as a BigNumberish.
    */
-  async mint(referral: BigNumberish): Promise<{ tokenId: BigNumberish }> {
+  async mint(
+    referral: BigNumberish
+  ): Promise<{ txHash: string; result: { tokenId: BigNumberish } }> {
     const membership: IMembership = this._membership();
-    await membership.connect(this.signer).mint(referral);
+    const tx = await membership.connect(this.signer).mint(referral);
+    const helper = this._helperMembershipAndStakePool();
+
+    const nftList = (await helper.getNFTList(this.signer.address)).nftList;
     return {
-      tokenId: await membership.getDefaultMembership(this.signer.address)
+      txHash: tx.hash,
+      result: {
+        tokenId: nftList[nftList.length - 1]
+      }
     };
   }
 

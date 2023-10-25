@@ -26,29 +26,29 @@ describe('Membership', async function() {
     const supply = (await membership.totalSupply()).toNumber();
     const client = await getClient();
     const result = await client.mint(0);
-    expect(supply + 1 == result.tokenId);
+    expect(supply + 1 == result.result.tokenId);
   });
   it('getRank', async function() {
     const client = await getClient();
-    const tokenId = (await client.mint(0)).tokenId;
+    const tokenId = (await client.mint(0)).result.tokenId;
     const result = await client.getRank(tokenId);
     expect(result.rank == 0);
   });
   it('getRank with specify stake pool', async function() {
     const client = await getClient();
-    const tokenId = (await client.mint(0)).tokenId;
+    const tokenId = (await client.mint(0)).result.tokenId;
     const result = await client.getRank(tokenId, ADDRESS.AVAX.STAKEPOOL);
     expect(result.rank == 0);
   });
   it('ownerOf', async function() {
     const client = await getClient();
-    const tokenId = (await client.mint(0)).tokenId;
+    const tokenId = (await client.mint(0)).result.tokenId;
     const result = await client.ownerOf(tokenId);
     expect(result.owner == client.signer.address);
   });
   it('usableToken', async function() {
     const client = await getClient();
-    const tokenId = (await client.mint(0)).tokenId;
+    const tokenId = (await client.mint(0)).result.tokenId;
     const result = await client.usableToken(client.signer.address, tokenId);
     expect(tokenId == result.usableTokenId);
   });
