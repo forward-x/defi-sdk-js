@@ -23,6 +23,9 @@
     "husky": "^8.0.3",
     "rimraf": "^5.0.0",
     "tsdx": "^0.14.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "hardhat": "^2.18.3",
+    "@nomicfoundation/hardhat-toolbox": "^2.0.0",
+    "dotenv": "^11.0.0"
   }
 }
