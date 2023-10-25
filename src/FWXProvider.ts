@@ -15,7 +15,7 @@ export enum ProviderType {
   HTTP
 }
 
-export class FWXHTTPProvider {
+export class FWXProvider {
   provider: providers.JsonRpcProvider | providers.WebSocketProvider;
   signer!: ethers.Wallet;
 
@@ -23,7 +23,7 @@ export class FWXHTTPProvider {
   private stakePool: IStakePool | null = null;
   private helperMembershipAndStakePool: IHelperMembershipAndStakePool | null = null;
 
-  constructor(url: string, type: ProviderType) {
+  constructor(url: string, type: ProviderType, provider?: ethers.providers.JsonRpcProvider) {
     switch (type) {
       case ProviderType.HTTP:
         this.provider = new providers.JsonRpcProvider(url);
@@ -31,6 +31,9 @@ export class FWXHTTPProvider {
       case ProviderType.WS:
         this.provider = new providers.WebSocketProvider(url);
         break;
+    }
+    if (provider) {
+      this.provider = provider;
     }
   }
   /**
@@ -104,7 +107,7 @@ export class FWXHTTPProvider {
    */
   async mint(referral: BigNumberish): Promise<{ tokenId: BigNumberish }> {
     const membership: IMembership = this._membership();
-    await membership.mint(referral);
+    await membership.connect(this.signer).mint(referral);
     return {
       tokenId: await membership.getDefaultMembership(this.signer.address)
     };
@@ -117,15 +120,16 @@ export class FWXHTTPProvider {
    * @param pool - (Optional) The address of a StakePool as a TokenSymbols.
    * @returns An object containing the rank as a BigNumberish.
    */
-  async getRank(tokenId: BigNumberish, pool?: TokenSymbols): Promise<{ rank: BigNumberish }> {
+  async getRank(tokenId: BigNumberish, stakePoolAddress?: string): Promise<{ rank: BigNumberish }> {
     const membership: IMembership = this._membership();
 
-    if (!pool) {
-      return { rank: await membership['getRank(uint256)'](tokenId) };
+    if (!stakePoolAddress) {
+      return { rank: await membership.connect(this.signer)['getRank(uint256)'](tokenId) };
     }
 
+    const funcSig = 'getRank(address,uint256)';
     return {
-      rank: await membership['getRank(address,uint256)'](this._poolAddress(pool), tokenId)
+      rank: await membership.connect(this.signer)[funcSig](stakePoolAddress, tokenId)
     };
   }
 
@@ -137,7 +141,7 @@ export class FWXHTTPProvider {
    */
   async ownerOf(tokenId: BigNumberish): Promise<{ owner: string }> {
     const membership: IMembership = this._membership();
-    return { owner: await membership.ownerOf(tokenId) };
+    return { owner: await membership.connect(this.signer).ownerOf(tokenId) };
   }
 
   /**
@@ -152,7 +156,7 @@ export class FWXHTTPProvider {
     tokenId: BigNumberish
   ): Promise<{ usableTokenId: BigNumberish }> {
     const membership: IMembership = this._membership();
-    return { usableTokenId: await membership.usableTokenId(owner, tokenId) };
+    return { usableTokenId: await membership.connect(this.signer).usableTokenId(owner, tokenId) };
   }
 
   /**
